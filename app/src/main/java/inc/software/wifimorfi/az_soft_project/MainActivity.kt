@@ -9,5 +9,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 setContentView(R.layout.activity_main)
         // Just a Clear Begining And Way Throw ...
+        // Do you Know ? Why is it so slow
 }
 }
