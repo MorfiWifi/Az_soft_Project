@@ -22,10 +22,10 @@ public class ViewHolder_message extends RecyclerView.ViewHolder {
     public ViewHolder_message(View itemView) {
         super(itemView);
 
-        image = (ImageView) itemView.findViewById(R.id.im_message_image);
+        /*image = (ImageView) itemView.findViewById(R.id.im_message_image);
         im3dot = (ImageView) itemView.findViewById(R.id.im_message_more);
         t1 = (TextView) itemView.findViewById(R.id.tv_message_t1);
         t2 = (TextView) itemView.findViewById(R.id.tv_message_t2);
-        t3 = (TextView) itemView.findViewById(R.id.tv_message_t3);
+        t3 = (TextView) itemView.findViewById(R.id.tv_message_t3);*/
     }
 }
