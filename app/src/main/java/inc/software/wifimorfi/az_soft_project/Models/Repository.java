@@ -7,8 +7,8 @@ import java.sql.SQLData;
 
 public class Repository {
 
-    private DaoMaster.DevOpenHelper helper;
-    private DaoSession daoSession;
+    private static DaoMaster.DevOpenHelper helper;
+    private static DaoSession daoSession;
 
     /*public void getTH (){
         Dock dock = new Dock("max");
@@ -17,7 +17,7 @@ public class Repository {
 
     }*/
 
-    public DaoSession GetInstant (Context context){
+    public static DaoSession GetInstant (Context context){
         if (daoSession == null){
             helper = new DaoMaster.DevOpenHelper(context,"azsoftwaredb" , null);
             SQLiteDatabase db = helper.getWritableDatabase();
@@ -28,7 +28,7 @@ public class Repository {
         return daoSession;
     }
 
-    public DaoSession GetNewInstant (Context context){
+    public static DaoSession GetNewInstant (Context context){
         //Force building new One
         helper = new DaoMaster.DevOpenHelper(context,"azsoftwaredb" , null);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -36,6 +36,7 @@ public class Repository {
         daoSession = daoMaster.newSession();
         return daoSession;
     }
+
 
 
 }

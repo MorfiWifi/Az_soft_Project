@@ -1,42 +1,68 @@
 package inc.software.wifimorfi.az_soft_project.Models;
 
-import com.orm.SugarRecord;
-
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.Unique;
 
 @Entity  public class Dock  {
 
     public Dock (){
 
     }
-    public Dock(String name) {
-        this.name = name;
 
 
-}
-    @Generated(hash = 205669810)
-    public Dock(long Id, String name) {
-        this.Id = Id;
+
+    @Generated(hash = 320275541)
+    public Dock(Long id, String name, String fullpath) {
+        this.id = id;
         this.name = name;
+        this.fullpath = fullpath;
     }
-    public long getId() {
-        return this.Id;
+
+
+
+    public void setId(Long Id) {
+        this.id = Id;
     }
-    public void setId(long Id) {
-        this.Id = Id;
+
+
+
+    public Long getId() {
+        return this.id;
     }
+
+
+
     public String getName() {
         return this.name;
     }
+
+
+
     public void setName(String name) {
         this.name = name;
     }
 
-    @org.greenrobot.greendao.annotation.Id
-    long Id;
+
+
+    public String getFullpath() {
+        return this.fullpath;
+    }
+
+
+
+    public void setFullpath(String fullpath) {
+        this.fullpath = fullpath;
+    }
+
+    @Id(autoincrement = true  )
+    //@Index(value = "5", unique = true)
+    Long id;
     String name ;
+    String fullpath;
+
 
 
 

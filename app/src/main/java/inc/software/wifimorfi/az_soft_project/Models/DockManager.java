@@ -6,13 +6,18 @@ import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
+import java.util.List;
 
 import inc.software.wifimorfi.az_soft_project.Util.Init;
 
 public class DockManager {
 
 
-    public static void scan_memory (File dir) {
+    public static void scan_memory (File dir , Context context) {
+        DaoSession sesshion = Repository.GetInstant(context);
+        DockDao dockDao = sesshion.getDockDao();
+
+
 
         String pdfPattern = ".pdf";
 
@@ -22,14 +27,40 @@ public class DockManager {
             for (int i = 0; i < listFile.length; i++) {
 
                 if (listFile[i].isDirectory()) {
-                    scan_memory (listFile[i]);
+                    scan_memory (listFile[i] , context);
                 } else {
                     if (listFile[i].getName().endsWith(pdfPattern)){
                         //Do what ever u want
 
-                        Init.terminal(listFile[i].getAbsolutePath());
-                        // TODO: 5/6/2018  save Files Nemes !! (works OK!)
+                        String full_path = listFile[i].getAbsolutePath();
 
+
+
+                        String name =  listFile[i].getName();
+
+                        name = name.replace(".pdf" ,"");
+                        name = name.replace(".PDF" ,"");
+
+
+
+                        List<Dock> current_dock = dockDao.queryBuilder()
+                                .where(DockDao.Properties.Fullpath.eq(full_path))
+                                .list();
+
+
+                        if (current_dock.size() < 1 ){
+                            Dock tempi = new Dock();
+                            //tempi.Id = 1;
+                            tempi.fullpath = full_path;
+                            tempi.name = name;
+
+                            Init.terminal("Right Before Insertion");
+                            dockDao.insert(tempi); // Returnes The ID IN DB
+                            Init.terminal("Right After Insertion");
+                            Init.terminal(full_path);
+                        }else {
+                            Init.terminal("Db contains This one!");
+                        }
 
 
                     }

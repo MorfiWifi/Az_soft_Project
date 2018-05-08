@@ -1,8 +1,8 @@
-/*
 package inc.software.wifimorfi.az_soft_project.View;
 
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,28 +13,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.apps.morfiwifi.morfi_project_samane.R;
-import com.apps.morfiwifi.morfi_project_samane.models.Message;
-import com.apps.morfiwifi.morfi_project_samane.models.User;
-import com.apps.morfiwifi.morfi_project_samane.ui.ReciverActivity;
-
 import java.util.List;
 
-*/
-/**
- * Created by WifiMorfi on 3/25/2018.
- *//*
+import inc.software.wifimorfi.az_soft_project.MainActivity;
+import inc.software.wifimorfi.az_soft_project.Models.Dock;
+import inc.software.wifimorfi.az_soft_project.R;
+
+
+// Created by WifiMorfi on 3/25/2018.
 
 
 
 
-public class message_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_message> {
-    private List<Message> messages;
+
+public class Docks_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_message> {
+    private List<Dock> docks;
     private static  RecyclerView recyclerView;
     private static AppCompatActivity activity;
 
-    public message_RecyclerAdapter(List<Message> messages) {
-        this.messages = messages;
+    public Docks_RecyclerAdapter(List<Dock> docks) {
+        this.docks = docks;
     }
 
     @Override
@@ -46,18 +44,23 @@ public class message_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_mes
 
     @Override
     public void onBindViewHolder(ViewHolder_message holder, final int position ) {
-        Message sample_message = messages.get(position);
+        Dock sample_message = docks.get(position);
         // TODO: 3/25/2018  Choose Aproprate Image for Message (Be aware !)
         // TODO: 3/25/2018  ocnverting Date To persian One!!
         // {holder.image = case {type of User} }
-        holder.t3.setText(sample_message.Recive_Date);
+     /*   holder.t3.setText(sample_message.Recive_Date);
         holder.t1.setText(sample_message.Reciver_Type.toString()); // Use Message Header Insetead!
-        holder.t2.setText(sample_message.Tags); // Minimall Tags! (Not All OF Them !)
+        holder.t2.setText(sample_message.Tags); // Minimall Tags! (Not All OF Them !)*/
+
+        holder.t1.setText(sample_message.getName());
+        //holder.t3.setText("-NO YET-"); // Use Message Header Insetead!
+        //holder.t2.setText("-NO YET-"); // Minimall Tags! (Not All OF Them !)
 
         holder.im3dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (activity instanceof ReciverActivity){
+
+                if (activity instanceof MainActivity){
                     LinearLayout bottom_sheet = (LinearLayout)
                         activity.findViewById(R.id.bottom_sheet);
                     final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
@@ -67,18 +70,22 @@ public class message_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_mes
 
                     TextView tv_sender = (TextView) activity.findViewById(R.id.tv_message_sender);
                     // TODO: 4/7/2018 fix sender Type (Needs A query OR Fix !?)
-                    tv_sender.setText(User.kind.Admin.toString());
+                    //tv_sender.setText(docks.kind.Admin.toString());
+
+                    tv_sender.setText("-YET NO USE-");
 
                     TextView tv_header = (TextView) activity.findViewById(R.id.tv_message_header);
                     // TODO: 4/7/2018 Fix Token (seperated and Moded!! power View)
-                    tv_header.setText(messages.get(position).Tags);
-
+                    //tv_header.setText(docks.get(position).Tags);
+                    tv_header.setText(docks.get(position).getName());
 
                     TextView tv_matn = (TextView) activity.findViewById(R.id.tv_message_matn);
-                    tv_matn.setText(messages.get(position).Matn);
+                    //tv_matn.setText(docks.get(position).Matn);
+                    tv_matn.setText("-YET NO USE-");
 
                     TextView tv_date = (TextView) activity.findViewById(R.id.tv_message_date);
-                    tv_date.setText(messages.get(position).Recive_Date);
+                    //tv_date.setText(docks.get(position).Recive_Date);
+                    tv_date.setText("-YET NO USE-");
 
                     // TODO: 4/7/2018 Fix Message With Or Without Replay
                     Button bu_reply = (Button) activity.findViewById(R.id.bu_replat_message);
@@ -109,19 +116,24 @@ public class message_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_mes
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return docks.size();
     }
 
 
 
-    public static void Init(List<Message> messages , AppCompatActivity activity){
-        recyclerView = activity.findViewById(R.id.rec_messages_recycle);
-        message_RecyclerAdapter.activity = activity;
+    public static void Init(List<Dock> messages , AppCompatActivity activity){
+        recyclerView = activity.findViewById(R.id.docs_recycle);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(activity, 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+
+
+        Docks_RecyclerAdapter.activity = activity;
         //recyclerView.refreshDrawableState();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        //LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+        //recyclerView.setLayoutManager(linearLayoutManager);
+
         recyclerView.setHasFixedSize(false);
-        recyclerView.setAdapter(new message_RecyclerAdapter(messages));
+        recyclerView.setAdapter(new Docks_RecyclerAdapter(messages));
 
     }
-}*/
+}

@@ -19,6 +19,7 @@
 
         <ImageView
 
+            android:id="@+id/im_cross"
             android:layout_gravity="right"
             android:src="@drawable/ic_close"
             android:layout_width="match_parent"
@@ -35,7 +36,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/im_doc_type"
+            android:id="@+id/im_doc_image"
             android:src="@drawable/ic_account_temp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -49,6 +50,7 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/tv_doc_name"
             android:textSize="20sp"
             android:gravity="center"
             android:layout_weight="0.1"
@@ -57,6 +59,7 @@
             android:layout_height="match_parent" />
 
         <ImageView
+            android:id="@+id/im_3dot"
             android:layout_weight="0.1"
             android:src="@drawable/ic_3dot_horiz"
             android:layout_width="match_parent"
