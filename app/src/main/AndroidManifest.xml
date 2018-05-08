@@ -32,7 +32,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Ui.TestDaoActivity"></activity>
+        <activity android:name=".Ui.TestDaoActivity" />
+        <activity android:name=".Ui.PopupActivity"
+            android:theme="@style/Translucent">
+
+
+        </activity>
     </application>
 
 </manifest>

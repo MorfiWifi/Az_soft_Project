@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<slide xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="together"
+    android:duration="300"
+    android:slideEdge="top"
+    >
+
+    <targets>
+        <target android:excludeId="@android:id/statusBarBackground" />
+        <target android:excludeId="@android:id/navigationBarBackground" />
+        <!--<target android:excludeId="@id/second_activity_toolbar" />-->
+    </targets>
+
+</slide>

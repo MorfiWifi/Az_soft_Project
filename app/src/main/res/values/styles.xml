@@ -1,4 +1,4 @@
-<resources>
+ <resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -7,5 +7,20 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+     <style name="Translucent" parent="AppTheme">
+
+         <item name="android:windowActionBar">false</item>
+         <item name="android:windowNoTitle">true</item>
+         <item name="android:windowIsTranslucent">true</item>
+         <item name="android:windowBackground">@color/transpa</item>
+         <item name="android:windowActivityTransitions">true</item>
+         <item name="android:windowEnterTransition">@transition/filter_trans</item>
+     </style>
+
+
+
+
+
 
 </resources>

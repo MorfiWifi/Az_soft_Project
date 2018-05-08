@@ -1,6 +1,8 @@
 package inc.software.wifimorfi.az_soft_project.Util;
 
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -13,6 +15,7 @@ import inc.software.wifimorfi.az_soft_project.Models.DaoSession;
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
 import inc.software.wifimorfi.az_soft_project.Models.DockDao;
 import inc.software.wifimorfi.az_soft_project.Models.Repository;
+import inc.software.wifimorfi.az_soft_project.Ui.PopupActivity;
 import inc.software.wifimorfi.az_soft_project.View.Docks_RecyclerAdapter;
 
 public class Init {
@@ -42,6 +45,12 @@ public class Init {
         Toas(context ,count  );
 
         Docks_RecyclerAdapter.Init(current_docks2 , activity);
+
+    }
+
+    public static void Kot_start_pop(Context context ,AppCompatActivity activity  ){
+        context.startActivity(new Intent(activity, PopupActivity.class),
+                        ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
     }
 
 }
