@@ -133,12 +133,12 @@ public class Docks_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_messa
             }
         });
 
-        holder.t1.setOnClickListener(new View.OnClickListener() {
+        /*holder.t1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Init.Kot_start_pop(activity , activity);
             }
-        });
+        });*/
     }
 
 

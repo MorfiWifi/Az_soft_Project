@@ -6,16 +6,12 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import org.greenrobot.greendao.AbstractDao;
-
-import java.util.Collection;
 import java.util.List;
 
 import inc.software.wifimorfi.az_soft_project.Models.DaoSession;
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
-import inc.software.wifimorfi.az_soft_project.Models.DockDao;
 import inc.software.wifimorfi.az_soft_project.Models.Repository;
-import inc.software.wifimorfi.az_soft_project.Ui.PopupActivity;
+import inc.software.wifimorfi.az_soft_project.Ui.TopSheetActivity;
 import inc.software.wifimorfi.az_soft_project.View.Docks_RecyclerAdapter;
 
 public class Init {
@@ -49,7 +45,7 @@ public class Init {
     }
 
     public static void Kot_start_pop(Context context ,AppCompatActivity activity  ){
-        context.startActivity(new Intent(activity, PopupActivity.class),
+        context.startActivity(new Intent(activity, TopSheetActivity.class),
                         ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
     }
 

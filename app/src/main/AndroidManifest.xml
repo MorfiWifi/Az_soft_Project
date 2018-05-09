@@ -33,8 +33,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".Ui.TestDaoActivity" />
-        <activity android:name=".Ui.PopupActivity"
-            android:theme="@style/Translucent">
+        <activity
+            android:name=".Ui.TopSheetActivity"
+            android:theme="@style/Translucent" />
+        <activity android:name=".Ui.DialogueActivity" />
+        <activity
+            android:name=".Ui.Send_ReciveActivity"
+            android:theme="@style/Base.Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".Ui.Test2Activity"
+            android:label="@string/title_activity_test2"
+            android:theme="@style/AppTheme.NoActionBar">
 
 
         </activity>

@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/popup_activity"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".Ui.TopSheetActivity">
+    tools:context=".Ui.Test2Activity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -15,7 +12,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar3"
+            android:id="@+id/toolbar2"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -23,20 +20,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="340dp"
-        android:background="#fff"
-        android:elevation="2dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <include layout="@layout/content_test2" />
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="out_side"
-
-        />
-
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </android.support.design.widget.CoordinatorLayout>
