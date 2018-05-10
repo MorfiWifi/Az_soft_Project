@@ -48,4 +48,13 @@
         android:text="t2"
         android:textSize="20sp" />
 
+    <TextView
+        android:text="test3"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/tv_dialogue_tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

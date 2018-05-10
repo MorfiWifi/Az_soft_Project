@@ -12,13 +12,15 @@ import org.greenrobot.greendao.annotation.Unique;
 
 
     }
-    @Generated(hash = 197842254)
-    public Dock(Long id, String name, String fullpath, String comment, int rate) {
+    @Generated(hash = 1870994067)
+    public Dock(Long id, String name, String fullpath, String comment, int rate,
+            Long size) {
         this.id = id;
         this.name = name;
         this.fullpath = fullpath;
         this.comment = comment;
         this.rate = rate;
+        this.size = size;
     }
     public Long getId() {
         return this.id;
@@ -50,6 +52,12 @@ import org.greenrobot.greendao.annotation.Unique;
     public void setRate(int rate) {
         this.rate = rate;
     }
+    public Long getSize() {
+        return this.size;
+    }
+    public void setSize(Long size) {
+        this.size = size;
+    }
 
     
 
@@ -60,6 +68,7 @@ import org.greenrobot.greendao.annotation.Unique;
     String fullpath;
     String comment;
     int rate ;
+    Long size;
 
 
 

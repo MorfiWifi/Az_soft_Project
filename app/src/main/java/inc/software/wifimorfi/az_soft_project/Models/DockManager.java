@@ -33,6 +33,7 @@ public class DockManager {
                         //Do what ever u want
 
                         String full_path = listFile[i].getAbsolutePath();
+                        long size = listFile[i].length();
 
 
 
@@ -55,6 +56,7 @@ public class DockManager {
                             //tempi.Id = 1;
                             tempi.fullpath = full_path;
                             tempi.name = name;
+                            tempi.size = size;
 
                             Init.terminal("Right Before Insertion");
                             dockDao.insert(tempi); // Returnes The ID IN DB

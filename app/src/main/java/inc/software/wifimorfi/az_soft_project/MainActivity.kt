@@ -41,22 +41,12 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         toolbar.title = "Main_paige"
         setSupportActionBar(toolbar)
-        // Just a Clear Begining And Way Throw ...
-        // Do you Know ? Why is it so slow
-        //Init.Toas( applicationContext,getExternalStorageState().toString())
-
 
         if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) ) {
             DockManager.scan_memory(Environment.getExternalStorageDirectory() , applicationContext)
             Init.Kot_Ja_main(applicationContext , this)
         }
-
-
-
-
-
-
-}
+    }
 
     fun normal_continue (){
         DockManager.scan_memory(Environment.getExternalStorageDirectory() , applicationContext)
@@ -67,18 +57,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.bar_menue, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
-
-        //noinspection SimplifiableIfStatement
         return if (id == R.id.action_settings) {
             true
         } else super.onOptionsItemSelected(item)
@@ -96,20 +80,6 @@ class MainActivity : AppCompatActivity() {
                 Init.Toas(applicationContext , "نده ..")
             }
         }
-        
-
-
-        /*if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            val i = permissions.size
-            while (i >= 0){
-                val per = permissions[i]
-                if (per == android.Manifest.permission.READ_EXTERNAL_STORAGE){
-                 Init.terminal("Very good Granted!")
-                }
-            }
-        }
-*/
-
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
