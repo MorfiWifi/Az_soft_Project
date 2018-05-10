@@ -10,58 +10,56 @@ import org.greenrobot.greendao.annotation.Unique;
 
     public Dock (){
 
+
     }
-
-
-
-    @Generated(hash = 320275541)
-    public Dock(Long id, String name, String fullpath) {
+    @Generated(hash = 197842254)
+    public Dock(Long id, String name, String fullpath, String comment, int rate) {
         this.id = id;
         this.name = name;
         this.fullpath = fullpath;
+        this.comment = comment;
+        this.rate = rate;
     }
-
-
-
-    public void setId(Long Id) {
-        this.id = Id;
-    }
-
-
-
     public Long getId() {
         return this.id;
     }
-
-
-
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getName() {
         return this.name;
     }
-
-
-
     public void setName(String name) {
         this.name = name;
     }
-
-
-
     public String getFullpath() {
         return this.fullpath;
     }
-
-
-
     public void setFullpath(String fullpath) {
         this.fullpath = fullpath;
     }
+    public String getComment() {
+        return this.comment;
+    }
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    public int getRate() {
+        return this.rate;
+    }
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    
 
     @Id(autoincrement = true  )
     //@Index(value = "5", unique = true)
     Long id;
     String name ;
     String fullpath;
+    String comment;
+    int rate ;
 
 
 

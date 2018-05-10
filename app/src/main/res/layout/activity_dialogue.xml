@@ -1,9 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="top"
     tools:context=".Ui.DialogueActivity">
 
-</android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/bt_dialogue_b1"
+        android:onClick="togle_server"
+        android:text="server"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:onClick="togle_client"
+        android:id="@+id/bt_dialogue_b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/bt_dialogue_b1"
+        android:layout_marginTop="75dp"
+        android:text="client" />
+
+    <TextView
+        android:id="@+id/tv_dialogue_tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bt_dialogue_b1"
+        android:layout_alignLeft="@+id/bt_dialogue_b1"
+        android:layout_marginLeft="100dp"
+
+        android:text="t1"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_dialogue_tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/bt_dialogue_b2"
+        android:layout_alignLeft="@id/bt_dialogue_b2"
+        android:layout_marginLeft="100dp"
+
+        android:text="t2"
+        android:textSize="20sp" />
+
+</RelativeLayout>

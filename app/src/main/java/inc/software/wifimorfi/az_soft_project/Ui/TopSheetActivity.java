@@ -1,5 +1,6 @@
 package inc.software.wifimorfi.az_soft_project.Ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +15,7 @@ public class TopSheetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popup);
+        setContentView(R.layout.activity_topsheet);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
         toolbar.setTitle("Top_Sheet");
         setSupportActionBar(toolbar);
@@ -46,5 +47,9 @@ public class TopSheetActivity extends AppCompatActivity {
 
     public void close_topsheet(MenuItem item) {
         onBackPressed();
+    }
+
+    public void go_share(View view) {
+        startActivity(new Intent(this , DialogueActivity.class));
     }
 }

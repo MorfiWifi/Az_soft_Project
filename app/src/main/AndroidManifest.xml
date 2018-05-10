@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -36,7 +41,9 @@
         <activity
             android:name=".Ui.TopSheetActivity"
             android:theme="@style/Translucent" />
-        <activity android:name=".Ui.DialogueActivity" />
+        <activity android:name=".Ui.DialogueActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light.Dialog.FixedSize"
+            />
         <activity
             android:name=".Ui.Send_ReciveActivity"
             android:theme="@style/Base.Theme.AppCompat.Dialog" />

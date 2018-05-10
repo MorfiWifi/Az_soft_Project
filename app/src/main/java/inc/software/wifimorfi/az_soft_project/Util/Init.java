@@ -4,6 +4,8 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -47,6 +49,16 @@ public class Init {
     public static void Kot_start_pop(Context context ,AppCompatActivity activity  ){
         context.startActivity(new Intent(activity, TopSheetActivity.class),
                         ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+    }
+
+    public static TextView find_tv_by_id (AppCompatActivity appCompatActivity ,  int m){
+        TextView tv = (TextView) appCompatActivity.findViewById(m);
+        return tv;
+    }
+
+    public static ImageView find_im_by_id (AppCompatActivity appCompatActivity , int m){
+        ImageView im = (ImageView) appCompatActivity.findViewById(m);
+        return im;
     }
 
 }

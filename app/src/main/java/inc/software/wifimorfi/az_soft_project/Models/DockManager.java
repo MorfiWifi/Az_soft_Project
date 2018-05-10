@@ -16,7 +16,7 @@ public class DockManager {
     public static void scan_memory (File dir , Context context) {
         DaoSession sesshion = Repository.GetInstant(context);
         DockDao dockDao = sesshion.getDockDao();
-
+        //dockDao.deleteAll(); // for new DB build
 
 
         String pdfPattern = ".pdf";
@@ -40,6 +40,8 @@ public class DockManager {
 
                         name = name.replace(".pdf" ,"");
                         name = name.replace(".PDF" ,"");
+
+
 
 
 
