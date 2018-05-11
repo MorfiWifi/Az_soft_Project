@@ -2,6 +2,7 @@ package inc.software.wifimorfi.az_soft_project.Models;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -9,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -18,7 +20,9 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -44,25 +48,27 @@ public class NetManager  {
     private static String Discovery_Respose = "DISCOVER_FUIFSERVER_RESPONSE";
     private static  String STOP_CODE = "EXIT";
     private   String KEY = "";
-    ReqType rq = ReqType.list_comment;
+    public static ReqType rq = ReqType.list_comment;
 
     private DatagramSocket client_socket;
     private DatagramSocket server_socket;
+    public static List<Dock> list;
 
     // TCP SERVER ----------------------------------
     private ServerSocket sSocket;
     private Socket tcp_server_socket;
-    private DataOutputStream dos;
-    private OutputStream os;
+    private DataOutputStream dataOutputStream;
+    private OutputStream outputStream;
     private File file;
     // TCP SERVER ----------------------------------
 
 
     // TCP CLIENT HERE -----------------------------
     private Socket tcp_client_socket;
-    private DataInputStream dis;
-    private InputStream is;
+    private DataInputStream dataInputStream;
+    private InputStream inputStream;
     private File file2;
+    public String host = "";
     // TCP CLIENT HERE -----------------------------
 
     public  void Stop_Server (){
@@ -98,7 +104,26 @@ public class NetManager  {
     }
 
     public void  Stop_Client_tcp () {
+        try {
+            if (tcp_client_socket != null)
+                tcp_client_socket.close();
+            Init.terminal("Client TCP stop -Forced");
+        }catch (Exception ex){
 
+        }
+
+    }
+
+    public void setHost(String s){
+        String ip = get_myIp();
+        String[] ips = ip.split("\\.");
+        if (ips.length > 1){
+            ips[ips.length-1] = s;
+            host = ips[0];
+            for (int i = 1; i < ips.length; i++) {
+                host = host+"."+ips[i];
+            }
+        }
     }
 
     public Runnable get_serevr(){
@@ -109,6 +134,13 @@ public class NetManager  {
         return new client();
     }
 
+    public Runnable get_serevr_tcp(){
+        return new server_tcp();
+    }
+
+    public Runnable get_client_tcp(){
+        return new client_tcp();
+    }
 
     public void Stop_Client(){
         if (client_socket != null){
@@ -130,36 +162,15 @@ public class NetManager  {
                 Enumeration<InetAddress> addresses = iface.getInetAddresses();
                 while(addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
-
-                   // Init.terminal(addr.getCanonicalHostName() +" :getCanonicalHostName");
-                    Init.terminal(addr.getAddress() +" :getAddress");
-                    Init.terminal(addr.isSiteLocalAddress() +" :isSiteLocalAddress");
-                    //Init.terminal(addr.getHostName() +" :getHostName");
-                    Init.terminal(addr.getHostAddress() +" :getHostAddress");
-//                    addr.getCanonicalHostName();
-//                    addr.getAddress();
-//                    addr.isSiteLocalAddress();
-//                    addr.getHostName();
-
-
                     Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
                     Matcher matcher = pattern.matcher(addr.getHostAddress());
 
                     if (matcher.matches()){
-                        Init.terminal("Pattern is A Correct IP");
+                        Init.terminal("Pattern inputStream A Correct IP");
                         ip = addr.getHostAddress();
                     }else {
                         Init.terminal("Non correct pattern");
                     }
-
-
-
-
-
-                    /*if (addr.getHostAddress().length() < 13){
-                        ip = addr.getHostAddress();
-                    }*/
-                    //System.out.println(iface.getDisplayName() + " " + ip);
                 }
             }
 
@@ -178,7 +189,7 @@ public class NetManager  {
             try {
 
 
-                //Keep a server_socket open to listen to all the UDP trafic that is destined for this port
+                //Keep a server_socket open to listen to all the UDP trafic that inputStream destined for this port
                 server_socket = new DatagramSocket(8888, InetAddress.getByName("0.0.0.0"));
                 server_socket.setBroadcast(true);
 
@@ -273,7 +284,7 @@ public class NetManager  {
                 //We have a response
                 System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
 
-                //Check if the message is correct
+                //Check if the message inputStream correct
                 String message = new String(receivePacket.getData()).trim();
                 if (message.equals(Discovery_Respose)) {
                     // TODO: 5/6/2018 Found The Server IP ! <CAN USE IT>
@@ -291,35 +302,60 @@ public class NetManager  {
 
     private class server_tcp implements Runnable{
 
-        //private JFileChooser jfc = new JFileChooser();
-
-
-
         @Override
         public void run() {
+            Gson gson = new Gson();
 
             try {
-                sSocket = new ServerSocket(8888);
-                System.out.println("Waiting for incoming connection request...");
-                tcp_server_socket = sSocket.accept();
-                //jfc.showOpenDialog(null);
-                //file = jfc.getSelectedFile();
 
-                // TODO: 5/10/2018 give the Correct File -Fullpath
-                FileInputStream fis = new FileInputStream(file);
-                os = tcp_server_socket.getOutputStream();
-                dos = new DataOutputStream(os);
-                dos.writeUTF(file.getName());
-                int count = 0;
-                byte[] b = new byte[1000];
-                System.out.println("Uploading File...");
-                while ((count = fis.read(b)) != -1) {
-                    dos.write(b, 0, count);
+                if (rq.equals(ReqType.list_comment)){
+
+                    String s = gson.toJson(list);
+
+
+
+                    sSocket = new ServerSocket(8888);
+                    System.out.println("Waiting for incoming connection request...");
+                    tcp_server_socket = sSocket.accept();
+                    outputStream = tcp_server_socket.getOutputStream();
+                    dataOutputStream = new DataOutputStream(outputStream);
+                    //dataOutputStream.writeUTF(file.getName());
+                    int count = 0;
+                    byte[] b = s.getBytes();
+                    System.out.println("Uploading List...");
+                    dataOutputStream.write(b, 0, b.length);
+                    //fis.close();
+                    tcp_server_socket.close(); // Do not Close This !!
+                    System.out.println("List Transfer Completed Successfully!");
+
+
+                }else if (rq.equals(ReqType.file)){
+
+                    sSocket = new ServerSocket(8888);
+                    System.out.println("Waiting for incoming connection request...");
+                    tcp_server_socket = sSocket.accept();
+                    //jfc.showOpenDialog(null);
+                    //file = jfc.getSelectedFile();
+
+                    // TODO: 5/10/2018 give the Correct File -Fullpath
+                    FileInputStream fis = new FileInputStream(file);
+                    outputStream = tcp_server_socket.getOutputStream();
+                    dataOutputStream = new DataOutputStream(outputStream);
+                    dataOutputStream.writeUTF(file.getName());
+                    int count = 0;
+                    byte[] b = new byte[1000];
+                    System.out.println("Uploading File...");
+                    while ((count = fis.read(b)) != -1) {
+                        dataOutputStream.write(b, 0, count);
+                    }
+
+                    fis.close();
+                    tcp_server_socket.close();
+                    System.out.println("File Transfer Completed Successfully!");
+
                 }
 
-                fis.close();
-                tcp_server_socket.close();
-                System.out.println("File Transfer Completed Successfully!");
+
 
             }catch (IOException ex){
 
@@ -331,15 +367,23 @@ public class NetManager  {
     private class client_tcp implements Runnable{
 
 
+
+
+
         @Override
         public void run() {
             try {
+                Gson gson = new Gson();
+
+
                 if (rq.equals(ReqType.file)){
-                    tcp_client_socket = new Socket("localhost", 8888);
-                    is = tcp_client_socket.getInputStream();
-                    dis = new DataInputStream(is);
+                    tcp_client_socket = new Socket(host, 8888);
+                    inputStream = tcp_client_socket.getInputStream();
+
+                    //tcp_client_socket.getOutputStream();
+                    dataInputStream = new DataInputStream(inputStream);
                     System.out.println("Waiting for File");
-                    //jfc.setSelectedFile(new File(dis.readUTF()));
+                    //jfc.setSelectedFile(new File(dataInputStream.readUTF()));
                     //jfc.showSaveDialog(null);
                     file2 = new File("C:\\text.txt"); // TODO: 5/10/2018 chainge path throw - fullpath
                     //file2 = ;
@@ -348,17 +392,44 @@ public class NetManager  {
                     int count = 0;
                     byte[] b = new byte[1000];
                     System.out.println("Incoming File");
-                    while((count = dis.read(b)) != -1){
+                    while((count = dataInputStream.read(b)) != -1){
+                        // count is the tru size ! (Some may not used)
                         fos.write(b, 0, count);
                     }
 
                     fos.close();
                     tcp_client_socket.close();
                     System.out.println("File Transfer Completed Successfully!");
+
+
                 }else if (rq.equals(ReqType.list_comment)){
+                    tcp_client_socket = new Socket(host, 8888);
+                    inputStream = tcp_client_socket.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream)); // For Reading String
+                    System.out.println("Waiting for File");
 
+                    // byte[] b = new byte[1000];
+                    System.out.println("Incoming File");
 
+                    String jsoon = "";
+                    String str;
+                    while ((str = bufferedReader.readLine()) != null) {
+                        jsoon = jsoon + str;
+                    }
 
+                    Init.terminal(jsoon);
+
+                    List<Dock> list2 = new ArrayList<>();
+
+                    try {
+                        list = gson.fromJson(jsoon , list2.getClass());
+                        Init.terminal("Converted Json To LIST");
+                    }catch (Exception ex){
+                        Init.terminal("Couldnt Convert JSON");
+                    }
+
+                    tcp_client_socket.close();
+                    System.out.println("File Transfer Completed Successfully!");
                 }
 
 

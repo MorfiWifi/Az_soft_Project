@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,4 +62,8 @@ public class Init {
         return im;
     }
 
+    public static EditText find_et_by_id (AppCompatActivity appCompatActivity , int m){
+        EditText et = (EditText) appCompatActivity.findViewById(m);
+        return et;
+    }
 }
