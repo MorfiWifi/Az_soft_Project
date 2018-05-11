@@ -1,5 +1,8 @@
 package inc.software.wifimorfi.az_soft_project.Models;
 
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -28,6 +31,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import inc.software.wifimorfi.az_soft_project.R;
+import inc.software.wifimorfi.az_soft_project.Ui.DialogueActivity;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
 
 public class NetManager  {
@@ -70,6 +75,106 @@ public class NetManager  {
     private File file2;
     public String host = "";
     // TCP CLIENT HERE -----------------------------
+
+
+    // SECRET ACCESS PART >>--------------------------------------------
+    private static Client_status cs = Client_status.OFF;
+    private static Server_status ss = Server_status.OFF;
+    private static NetManager nt = new NetManager();
+    private static Thread server ;
+    private static Thread client ;
+
+    enum Client_status {
+        OFF , ON
+    }
+
+    enum Server_status{
+        OFF , ON
+    }
+
+    public static Thread get_thread_instance_server (){
+        if (server == null){
+            server = new Thread(nt.get_serevr_tcp());
+        }
+        return server;
+    }
+
+    public static Thread get_thread_instance_client (){
+        if (client == null){
+            client = new Thread(nt.get_client_tcp());
+        }
+        return client;
+    }
+
+
+    public static void togle_client(View view) {
+        if (cs.equals(DialogueActivity.Client_status.OFF) ){
+            String key =  Init.find_et_by_id(this  , R.id.et_dialogue_server_key).getText().toString();
+            nt.host = key;
+            //nt.setHost(key);
+
+            // TODO: 5/11/2018  Connecting To Host is hard Coded At time! -- > For Debugging
+
+            get_thread_instance_client().start();
+            cs = DialogueActivity.Client_status.ON;
+
+
+
+
+            Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_ON");
+        }else {
+            nt.Stop_Client_tcp();
+            cs = DialogueActivity.Client_status.OFF;
+
+
+
+            Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_OFF");
+        }
+    }
+
+    public static void togle_server(View view) {
+        // TODO: 5/11/2018 when ser On -> Show The KEY ! -> Use Top sheet
+        if (ss.equals(Server_status.OFF)){
+            DaoSession session = Repository.GetInstant(getApplicationContext());
+            NetManager.list =  session.getDockDao().loadAll();
+            get_thread_instance_server().start();
+            show_client_ip(nt.get_myIp());
+            ss = DialogueActivity.Server_status.ON;
+            Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_ON");
+        }else {
+            nt.Stop_Server_tcp();
+            server = null; // Releasing Th thread (Should stop guess)
+            show_client_ip("NON.NON");
+            ss = DialogueActivity.Server_status.OFF;
+            Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_OFF");
+        }
+
+
+    }
+
+    public static void show_client_ip(AppCompatActivity appCompatActivity, String s){
+        String[] ss = s.split("\\.");
+        int m  = ss.length;
+        if (m>0){
+            Init.find_tv_by_id(appCompatActivity , R.id.tv_dialogue_tv3).setText(ss[m-1]);
+        }
+    }
+
+    // SECRET ACCESS PART >>--------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public  void Stop_Server (){
         this.KEY = STOP_CODE;

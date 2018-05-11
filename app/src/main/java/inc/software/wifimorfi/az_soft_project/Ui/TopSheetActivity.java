@@ -52,4 +52,8 @@ public class TopSheetActivity extends AppCompatActivity {
     public void go_share(View view) {
         startActivity(new Intent(this , DialogueActivity.class));
     }
+
+    public void connect_lan(View view) {
+
+    }
 }
