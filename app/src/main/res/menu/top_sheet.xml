@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="Setting"
+        android:title="بستن"
         android:icon="@drawable/ic_arrow_up"
         android:onClick="close_topsheet"
         app:showAsAction="always" />

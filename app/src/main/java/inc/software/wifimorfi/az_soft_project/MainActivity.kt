@@ -1,5 +1,6 @@
 package inc.software.wifimorfi.az_soft_project
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +11,9 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.google.gson.Gson
 import inc.software.wifimorfi.az_soft_project.Models.DockManager
+import inc.software.wifimorfi.az_soft_project.Ui.TopSheetActivity
 import inc.software.wifimorfi.az_soft_project.Util.Init
 import java.security.Permission
 
@@ -53,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         Init.Kot_Ja_main(applicationContext , this)
     }
     fun open_topsheet(item: MenuItem) {
+        //TopSheetActivity.mainAC = this // but Why ?
         Init.Kot_start_pop(this, this)
     }
 
@@ -69,6 +73,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == Init.REQ_COD){
+            //val gson : Gson
+            val data =  data?.getStringExtra(Init.Extra_Kry )
+            Init.MainAC_setting = data
+        }
+
+
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 
@@ -82,5 +97,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onDestroy() {
+        Init.Save_String(this , Init.Extra_Kry , Init.NO_THING)
+        //Init.terminal("MAIN ACTIVITY has Destroyed!!!")
+        super.onDestroy()
     }
 }

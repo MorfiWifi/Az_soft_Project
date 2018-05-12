@@ -1,5 +1,6 @@
 package inc.software.wifimorfi.az_soft_project.Models;
 
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -31,8 +32,11 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import inc.software.wifimorfi.az_soft_project.MainActivity;
 import inc.software.wifimorfi.az_soft_project.R;
 import inc.software.wifimorfi.az_soft_project.Ui.DialogueActivity;
+import inc.software.wifimorfi.az_soft_project.Ui.Net_setting;
+import inc.software.wifimorfi.az_soft_project.Ui.TopSheetActivity;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
 
 public class NetManager  {
@@ -46,14 +50,14 @@ public class NetManager  {
     public enum  client_state  { initiating_server , waiting_for_list
         ,reciving_list,reciving_date,waiting_for_date  }
 
-    public enum ReqType {list_comment , file}
+    //public enum ReqType {list_comment , file}
 
 
     private static String Discover_Request = "DISCOVER_FUIFSERVER_REQUEST";
     private static String Discovery_Respose = "DISCOVER_FUIFSERVER_RESPONSE";
     private static  String STOP_CODE = "EXIT";
     private   String KEY = "";
-    public static ReqType rq = ReqType.list_comment;
+    //public static ReqType rq = ReqType.list_comment;
 
     private DatagramSocket client_socket;
     private DatagramSocket server_socket;
@@ -78,19 +82,24 @@ public class NetManager  {
 
 
     // SECRET ACCESS PART >>--------------------------------------------
-    private static Client_status cs = Client_status.OFF;
-    private static Server_status ss = Server_status.OFF;
+    //private static Client_status cs = Client_status.OFF;
+    //private static Server_status ss = Server_status.OFF;
     private static NetManager nt = new NetManager();
     private static Thread server ;
     private static Thread client ;
+    private static NetManager netManager;
+    public static Net_setting net_setting_glob;
+    public static String net_setting_glob_str;
+    //public AppCompatActivity activity;
 
-    enum Client_status {
-        OFF , ON
+    public static NetManager getNt (AppCompatActivity activity){
+        if (netManager == null){
+            netManager = new NetManager();
+        }
+        //netManager.activity = activity;
+        return netManager;
     }
 
-    enum Server_status{
-        OFF , ON
-    }
 
     public static Thread get_thread_instance_server (){
         if (server == null){
@@ -106,57 +115,88 @@ public class NetManager  {
         return client;
     }
 
+    private Net_setting get_setting(){
+        String s = null; //Init.Load_String(activity , Init.Extra_Kry , Init.NO_THING); // Auto Null Loader! ins deg_val
 
-    public static void togle_client(View view) {
-        if (cs.equals(DialogueActivity.Client_status.OFF) ){
-            String key =  Init.find_et_by_id(this  , R.id.et_dialogue_server_key).getText().toString();
-            nt.host = key;
+
+        Gson gson = new Gson();
+        Net_setting net_setting = gson.fromJson(s , Net_setting.class);
+        if (net_setting != null){
+            if (net_setting == null){
+                net_setting = new Net_setting();
+                net_setting_glob = net_setting;
+            }
+        }else {
+            if (net_setting_glob == null){
+                net_setting = new Net_setting();
+                net_setting_glob = net_setting;
+            }
+        }
+
+        return  net_setting_glob;
+    }
+
+    public  void togle_client(AppCompatActivity appCompatActivity) {
+        Net_setting net_setting = get_setting();
+        Gson gson = new Gson();
+        if (net_setting.client_ST.equals(Net_setting.ReqType.OFF)){
+
+            String key =  "192.168.1.100"; // Fixed value YET
+                    //Init.find_et_by_id(this  , R.id.et_dialogue_server_key).getText().toString();
+            host = key;
             //nt.setHost(key);
 
             // TODO: 5/11/2018  Connecting To Host is hard Coded At time! -- > For Debugging
 
-            get_thread_instance_client().start();
-            cs = DialogueActivity.Client_status.ON;
-
-
-
-
-            Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_ON");
+            net_setting.client_ST = Net_setting.ReqType.list_comment;
+            net_setting_glob_str = gson.toJson(get_setting());
+            get_thread_instance_client().start(); // Can change th State in this code
+            //cs = DialogueActivity.Client_status.ON;
+            //Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_ON");
         }else {
-            nt.Stop_Client_tcp();
-            cs = DialogueActivity.Client_status.OFF;
-
-
-
-            Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_OFF");
+            get_setting().client_ST = Net_setting.ReqType.OFF;
+            net_setting_glob_str = gson.toJson(get_setting());
+            Stop_Client_tcp();
+            //cs = DialogueActivity.Client_status.OFF;
+            //Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_OFF");
         }
     }
 
-    public static void togle_server(View view) {
-        // TODO: 5/11/2018 when ser On -> Show The KEY ! -> Use Top sheet
-        if (ss.equals(Server_status.OFF)){
-            DaoSession session = Repository.GetInstant(getApplicationContext());
+    public  void togle_server(AppCompatActivity appCompatActivity) {
+        Net_setting net_setting = get_setting();
+        Gson gson = new Gson();
+        if (net_setting.server_ST.equals(Net_setting.ReqType.OFF)){
+            DaoSession session = Repository.GetInstant(appCompatActivity);
             NetManager.list =  session.getDockDao().loadAll();
-            get_thread_instance_server().start();
-            show_client_ip(nt.get_myIp());
-            ss = DialogueActivity.Server_status.ON;
-            Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_ON");
+            net_setting.server_ST = Net_setting.ReqType.list_comment;
+            //Init.MainAC_setting = gson.toJson(get_setting());
+            //Init.Save_String(activity , Init.Extra_Kry , gson.toJson(get_setting())); //Yet Disabled THIS CODE
+            // TODO: 5/12/2018 No EX IN UPER CODE!!
+             net_setting_glob_str = gson.toJson(get_setting());
+            get_thread_instance_server().start(); // Check nex value's here
+            show_client_ip(); // how the KEY - UP
+            //ss = DialogueActivity.Server_status.ON;
+            //Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_ON"); // No dialogue YET
         }else {
-            nt.Stop_Server_tcp();
+            get_setting().server_ST = Net_setting.ReqType.OFF;
+            net_setting_glob_str = gson.toJson(get_setting());
+            Stop_Server_tcp();
             server = null; // Releasing Th thread (Should stop guess)
-            show_client_ip("NON.NON");
-            ss = DialogueActivity.Server_status.OFF;
-            Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_OFF");
+            show_client_ip();
+
+            //ss = DialogueActivity.Server_status.OFF;
+            //Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_OFF");
         }
 
 
     }
 
-    public static void show_client_ip(AppCompatActivity appCompatActivity, String s){
+    public  void show_client_ip(){
+        String s = get_myIp();
         String[] ss = s.split("\\.");
         int m  = ss.length;
         if (m>0){
-            Init.find_tv_by_id(appCompatActivity , R.id.tv_dialogue_tv3).setText(ss[m-1]);
+            get_setting().KEY = ss[m-1];
         }
     }
 
@@ -410,14 +450,12 @@ public class NetManager  {
         @Override
         public void run() {
             Gson gson = new Gson();
+            Net_setting net_setting = get_setting();
 
             try {
 
-                if (rq.equals(ReqType.list_comment)){
-
+                if (net_setting.server_ST.equals(Net_setting.ReqType.list_comment)||net_setting.server_ST.equals(Net_setting.ReqType.OFF)){
                     String s = gson.toJson(list);
-
-
 
                     sSocket = new ServerSocket(8888);
                     System.out.println("Waiting for incoming connection request...");
@@ -434,15 +472,14 @@ public class NetManager  {
                     System.out.println("List Transfer Completed Successfully!");
 
 
-                }else if (rq.equals(ReqType.file)){
+                }else if (net_setting.server_ST.equals(Net_setting.ReqType.file)){
 
+                    // TODO: 5/12/2018 Implement File Transfer
                     sSocket = new ServerSocket(8888);
                     System.out.println("Waiting for incoming connection request...");
                     tcp_server_socket = sSocket.accept();
                     //jfc.showOpenDialog(null);
                     //file = jfc.getSelectedFile();
-
-                    // TODO: 5/10/2018 give the Correct File -Fullpath
                     FileInputStream fis = new FileInputStream(file);
                     outputStream = tcp_server_socket.getOutputStream();
                     dataOutputStream = new DataOutputStream(outputStream);
@@ -462,8 +499,10 @@ public class NetManager  {
 
 
 
-            }catch (IOException ex){
-
+            }catch (Exception ex){
+                sSocket = null;
+                tcp_server_socket = null;
+                //get_setting().server_ST = Net_setting.ReqType.OFF;
             }
 
         }
@@ -479,9 +518,9 @@ public class NetManager  {
         public void run() {
             try {
                 Gson gson = new Gson();
+                Net_setting net_setting = get_setting();
 
-
-                if (rq.equals(ReqType.file)){
+                if (net_setting.client_ST.equals(Net_setting.ReqType.list_comment)||net_setting.client_ST.equals(Net_setting.ReqType.OFF)){
                     tcp_client_socket = new Socket(host, 8888);
                     inputStream = tcp_client_socket.getInputStream();
 
@@ -507,7 +546,8 @@ public class NetManager  {
                     System.out.println("File Transfer Completed Successfully!");
 
 
-                }else if (rq.equals(ReqType.list_comment)){
+                }else if (net_setting.client_ST.equals(Net_setting.ReqType.file)){
+                    // TODO: 5/12/2018 implement TCP File Client
                     tcp_client_socket = new Socket(host, 8888);
                     inputStream = tcp_client_socket.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream)); // For Reading String
@@ -537,16 +577,15 @@ public class NetManager  {
                     System.out.println("File Transfer Completed Successfully!");
                 }
 
-
-
             }catch (Exception ex){
-
+                tcp_client_socket = null;
+                //get_setting().client_ST = Net_setting.ReqType.OFF;
             }
         }
     }
     public class requst {
         private Dock dock;
-        private ReqType reqType;
+        //private ReqType reqType;
 
         public String get_str(){
             Gson gson = new Gson();
@@ -558,6 +597,36 @@ public class NetManager  {
             return gson.fromJson(s , requst.class);
         }
     }
+
+    /*public void updater_view (){
+
+        new Thread(new Runnable() {
+            public void run() {
+                mHandlerUpdateUi.post(mUpdateUpdateUi);
+
+            }}).start();
+
+    }
+
+    final Handler mHandlerUpdateUi= new Handler();
+
+    final Runnable mUpdateUpdateUi = new Runnable() {
+        public void run() {
+            //update ui here
+            try {
+                while (true){
+                    //load_setting(setting_json);
+                    Gson gson = new Gson();
+                    Init.MainAC_setting = gson.toJson(get_setting());
+                    wait(); // Cuses EXception
+                }
+            }catch (Exception ex){
+                Init.terminal("EXCEPTION IN UPDATE VIEW NETMAN");
+                Init.terminal(ex.getMessage());
+
+            }
+        }
+    };*/
 
 
 }

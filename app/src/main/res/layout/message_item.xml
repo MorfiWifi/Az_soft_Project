@@ -36,8 +36,10 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/im_doc_image"
-            android:src="@drawable/ic_account_temp"
+            android:src="@drawable/ic_pdf"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
