@@ -47,11 +47,11 @@ public class TopSheetActivity extends AppCompatActivity {
             public void run() {
                 //tv.append("Hello World");
                 load_setting(NetManager.net_setting_glob_str);
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 500);
             }
         };
 
-        handler.postDelayed(r, 1000);
+        handler.postDelayed(r, 500);
 
     }
 
@@ -63,28 +63,33 @@ public class TopSheetActivity extends AppCompatActivity {
         Net_setting net_setting = gson.fromJson(setting_json , Net_setting.class);
         if (net_setting != null){
             if (net_setting.client_ST.equals(Net_setting.ReqType.couldnt_connect)){
+                Init.find_im_by_id(this , R.id.im_topsheet_wifi).setImageResource(R.drawable.ic_no_wifi);
+
                 Init.find_sw_by_id(this , R.id.sw_topsheet_wifi).setChecked(false);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setText("خطا اتصال");
                 Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setTextColor(0xffff0000);
                 // TODO: 5/12/2018 chech if COLOR is red or NO !
             }else if (net_setting.client_ST.equals(Net_setting.ReqType.list_comment)){
+                Init.find_im_by_id(this , R.id.im_topsheet_wifi).setImageResource(R.drawable.ic_wifi);
                 Init.find_sw_by_id(this , R.id.sw_topsheet_wifi).setChecked(true);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setText("لیست");
-                Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setTextColor(0xffffffff);
+                Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setTextColor(0xff000000);
             }else if (net_setting.client_ST.equals(Net_setting.ReqType.file)){
+                Init.find_im_by_id(this , R.id.im_topsheet_wifi).setImageResource(R.drawable.ic_wifi);
                 Init.find_sw_by_id(this , R.id.sw_topsheet_wifi).setChecked(true);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setText("فابل");
-                Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setTextColor(0xffffffff);
+                Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setTextColor(0xff000000);
             }else{
+                Init.find_im_by_id(this , R.id.im_topsheet_wifi).setImageResource(R.drawable.ic_no_wifi);
                 Init.find_sw_by_id(this , R.id.sw_topsheet_wifi).setChecked(false);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setText("");
-                Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setTextColor(0xffffffff);
+                Init.find_tv_by_id(this , R.id.tv_topsheet_wifi).setTextColor(0xff000000);
             }
 
             if (net_setting.server_ST.equals(Net_setting.ReqType.list_comment)){
                 Init.find_sw_by_id(this , R.id.sw_topsheet_share).setChecked(true);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_share).setText("لیست");
-                Init.find_tv_by_id(this , R.id.tv_topsheet_share).setTextColor(0xffffffff);
+                Init.find_tv_by_id(this , R.id.tv_topsheet_share).setTextColor(0xff000000);
 
                 Init.find_tv_by_id(this , R.id.tv_topsheet_key).setText(net_setting.KEY);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_key).setVisibility(View.VISIBLE);
@@ -93,7 +98,7 @@ public class TopSheetActivity extends AppCompatActivity {
             }else if(net_setting.server_ST.equals(Net_setting.ReqType.file)){
                 Init.find_sw_by_id(this , R.id.sw_topsheet_share).setChecked(true);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_share).setText("فایل");
-                Init.find_tv_by_id(this , R.id.tv_topsheet_share).setTextColor(0xffffffff);
+                Init.find_tv_by_id(this , R.id.tv_topsheet_share).setTextColor(0xff000000);
 
                 Init.find_tv_by_id(this , R.id.tv_topsheet_key).setText(net_setting.KEY);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_key).setVisibility(View.VISIBLE);
@@ -110,7 +115,7 @@ public class TopSheetActivity extends AppCompatActivity {
             }else {
                 Init.find_sw_by_id(this , R.id.sw_topsheet_share).setChecked(false);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_share).setText("");
-                Init.find_tv_by_id(this , R.id.tv_topsheet_share).setTextColor(0xffffffff);
+                Init.find_tv_by_id(this , R.id.tv_topsheet_share).setTextColor(0xff000000);
 
                 //Init.find_tv_by_id(this , R.id.tv_topsheet_key).setText(net_setting.KEY);
                 Init.find_tv_by_id(this , R.id.tv_topsheet_key).setVisibility(View.GONE);
@@ -149,12 +154,20 @@ public class TopSheetActivity extends AppCompatActivity {
     }
 
     public void go_share(View view) {
-        //startActivity(new Intent(this , DialogueActivity.class)); // Yet no PopUP MENUE -> to be continued
+        //startActivity(new Intent(this , DialogueActivity_client.class)); // Yet no PopUP MENUE -> to be continued
         NetManager.getNt(this).togle_server(this);
     }
 
     public void connect_lan(View view) {
-        NetManager.getNt(this).togle_client(this);
+        if (NetManager.net_setting_glob == null){
+            Intent intent = new Intent(this , DialogueActivity_client.class);
+            startActivity(intent);
+        }else if (NetManager.net_setting_glob.client_ST.equals(Net_setting.ReqType.OFF)){
+            Intent intent = new Intent(this , DialogueActivity_client.class);
+            startActivity(intent);
+        }else {
+            NetManager.getNt(this).togle_client(this);
+        }
     }
 
     @Override

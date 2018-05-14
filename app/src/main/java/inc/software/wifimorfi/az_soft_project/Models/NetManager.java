@@ -1,8 +1,6 @@
 package inc.software.wifimorfi.az_soft_project.Models;
 
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.google.gson.Gson;
 
@@ -32,11 +30,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import inc.software.wifimorfi.az_soft_project.MainActivity;
-import inc.software.wifimorfi.az_soft_project.R;
-import inc.software.wifimorfi.az_soft_project.Ui.DialogueActivity;
 import inc.software.wifimorfi.az_soft_project.Ui.Net_setting;
-import inc.software.wifimorfi.az_soft_project.Ui.TopSheetActivity;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
 
 public class NetManager  {
@@ -78,6 +72,7 @@ public class NetManager  {
     private InputStream inputStream;
     private File file2;
     public String host = "";
+    private static File path ;
     // TCP CLIENT HERE -----------------------------
 
 
@@ -137,9 +132,18 @@ public class NetManager  {
     }
 
     public  void togle_client(AppCompatActivity appCompatActivity) {
+        path = appCompatActivity.getFilesDir();
         Net_setting net_setting = get_setting();
         Gson gson = new Gson();
         if (net_setting.client_ST.equals(Net_setting.ReqType.OFF)){
+
+            if (!net_setting.server_ST.equals(Net_setting.ReqType.OFF)){
+                togle_server(appCompatActivity);
+            }
+
+
+            setHost(net_setting.KEY); // TODO: 5/14/2018 Use Host to connect
+            // The END KET
 
             String key =  "192.168.1.100"; // Fixed value YET
                     //Init.find_et_by_id(this  , R.id.et_dialogue_server_key).getText().toString();
@@ -151,40 +155,53 @@ public class NetManager  {
             net_setting.client_ST = Net_setting.ReqType.list_comment;
             net_setting_glob_str = gson.toJson(get_setting());
             get_thread_instance_client().start(); // Can change th State in this code
-            //cs = DialogueActivity.Client_status.ON;
+            //cs = DialogueActivity_client.Client_status.ON;
             //Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_ON");
         }else {
             get_setting().client_ST = Net_setting.ReqType.OFF;
             net_setting_glob_str = gson.toJson(get_setting());
             Stop_Client_tcp();
-            //cs = DialogueActivity.Client_status.OFF;
+            //cs = DialogueActivity_client.Client_status.OFF;
             //Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_OFF");
         }
     }
 
     public  void togle_server(AppCompatActivity appCompatActivity) {
+        path = appCompatActivity.getFilesDir();
         Net_setting net_setting = get_setting();
         Gson gson = new Gson();
         if (net_setting.server_ST.equals(Net_setting.ReqType.OFF)){
+
+
+            if (!net_setting.client_ST.equals(Net_setting.ReqType.OFF)){
+                togle_client(appCompatActivity);
+            }
+
+
             DaoSession session = Repository.GetInstant(appCompatActivity);
             NetManager.list =  session.getDockDao().loadAll();
             net_setting.server_ST = Net_setting.ReqType.list_comment;
             //Init.MainAC_setting = gson.toJson(get_setting());
             //Init.Save_String(activity , Init.Extra_Kry , gson.toJson(get_setting())); //Yet Disabled THIS CODE
-            // TODO: 5/12/2018 No EX IN UPER CODE!!
-             net_setting_glob_str = gson.toJson(get_setting());
+
+            show_client_ip();
+            net_setting_glob_str = gson.toJson(get_setting());
+
+
+
             get_thread_instance_server().start(); // Check nex value's here
-            show_client_ip(); // how the KEY - UP
-            //ss = DialogueActivity.Server_status.ON;
+             // how the KEY - UP
+            //ss = DialogueActivity_client.Server_status.ON;
             //Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_ON"); // No dialogue YET
         }else {
+            show_client_ip();
             get_setting().server_ST = Net_setting.ReqType.OFF;
             net_setting_glob_str = gson.toJson(get_setting());
             Stop_Server_tcp();
             server = null; // Releasing Th thread (Should stop guess)
-            show_client_ip();
 
-            //ss = DialogueActivity.Server_status.OFF;
+
+            //ss = DialogueActivity_client.Server_status.OFF;
             //Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_OFF");
         }
 
@@ -469,12 +486,52 @@ public class NetManager  {
                     dataOutputStream.write(b, 0, b.length);
                     //fis.close();
                     tcp_server_socket.close(); // Do not Close This !!
+
+
+
+
+                    net_setting.server_ST = Net_setting.ReqType.file;
+                    net_setting_glob_str = gson.toJson(get_setting());
                     System.out.println("List Transfer Completed Successfully!");
+
+                    // ------------------------------->>>>>>>>>> Second part
+
+                    while (true){
+                        // TODO: 5/12/2018 Implement File Transfer
+                        sSocket = new ServerSocket(8888);
+                        System.out.println("Waiting for incoming connection request...");
+                        tcp_server_socket = sSocket.accept();
+                        inputStream = tcp_server_socket.getInputStream();
+                        //inputStream.read()
+
+                        // NOW GET THE DOCK THAT WANT !!!! EVEN ID IS ENOUGH!
+
+
+                        //jfc.showOpenDialog(null);
+                        //file = jfc.getSelectedFile();
+                        file = new File(path, "my-file-name.txt");
+
+
+                        FileInputStream fis = new FileInputStream(file);
+                        outputStream = tcp_server_socket.getOutputStream();
+                        dataOutputStream = new DataOutputStream(outputStream);
+                        dataOutputStream.writeUTF(file.getName());
+                        count = 0;
+                        b = new byte[1000];
+                        System.out.println("Uploading File...");
+                        while ((count = fis.read(b)) != -1) {
+                            dataOutputStream.write(b, 0, count);
+                        }
+
+                        fis.close();
+                        tcp_server_socket.close();
+                        System.out.println("File Transfer Completed Successfully!");
+                    }
 
 
                 }else if (net_setting.server_ST.equals(Net_setting.ReqType.file)){
 
-                    // TODO: 5/12/2018 Implement File Transfer
+                    // TODO: 5/12/2018 This is Redundent YET>>>>>>>>>>
                     sSocket = new ServerSocket(8888);
                     System.out.println("Waiting for incoming connection request...");
                     tcp_server_socket = sSocket.accept();

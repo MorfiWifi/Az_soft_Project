@@ -64,8 +64,8 @@ public class Init {
     public static void Kot_start_pop(Context context ,AppCompatActivity activity  ){
         Intent intent = new Intent(activity, TopSheetActivity.class);
         intent.putExtra(Extra_Kry , MainAC_setting);
-        activity.startActivityForResult(intent, REQ_COD , ActivityOptions.makeSceneTransitionAnimation(activity).toBundle() );
-        // TODO: 5/12/2018 You may can Remove & replace this
+        activity.startActivity(intent , ActivityOptions.makeSceneTransitionAnimation(activity).toBundle() );
+
     }
 
     public static TextView find_tv_by_id (AppCompatActivity appCompatActivity ,  int m){
