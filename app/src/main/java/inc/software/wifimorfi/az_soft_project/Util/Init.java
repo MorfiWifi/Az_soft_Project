@@ -4,6 +4,8 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.widget.EditText;
@@ -13,9 +15,13 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import inc.software.wifimorfi.az_soft_project.MainActivity;
 import inc.software.wifimorfi.az_soft_project.Models.DaoSession;
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
+import inc.software.wifimorfi.az_soft_project.Models.NetManager;
 import inc.software.wifimorfi.az_soft_project.Models.Repository;
+import inc.software.wifimorfi.az_soft_project.Ui.File_ChooserActivity;
+import inc.software.wifimorfi.az_soft_project.Ui.Net_setting;
 import inc.software.wifimorfi.az_soft_project.Ui.TopSheetActivity;
 import inc.software.wifimorfi.az_soft_project.View.Docks_RecyclerAdapter;
 
@@ -30,6 +36,8 @@ public class Init {
     //public static TopSheetActivity topSheetAC;
     private static String PEREF_KEY = "AZ_SOFT_PREFS";
     public static String NO_THING = "NON";
+    public static AlertDialog alertDialog;
+    private static Boolean can_continue = true;
 
 
     public static void Toas (Context context, String text ){
@@ -42,8 +50,8 @@ public class Init {
 
     public static void Kot_Ja_main (Context context , AppCompatActivity activity){
 
+        //DaoSession session = Repository.GetInstant(context);
         DaoSession session = Repository.GetInstant(context);
-        session = Repository.GetInstant(context);
         //List<?> current_docks2 =  (List<?>) session.getAllDaos();
 
         List<Dock> current_docks2 = session.getDockDao().loadAll();
@@ -55,7 +63,7 @@ public class Init {
                 .list();*/
 
         String count = String.valueOf(current_docks2.size());
-        Toas(context ,count  );
+        //Toas(context ,count  );
 
         Docks_RecyclerAdapter.Init(current_docks2 , activity);
 
@@ -101,6 +109,39 @@ public class Init {
             s = null;
         return s;
     }
+
+    public static void  check_recived_list(final AppCompatActivity activity){
+
+        final Handler handler = new Handler();
+
+        final Runnable r = new Runnable() {
+            public void run() {
+                //tv.append("Hello World");
+                list_cheker(activity);
+                if (!NetManager.isReciving_file){
+                    if (can_continue){
+                        handler.postDelayed(this, 500);
+                    }
+                }
+            }
+        };
+
+        handler.postDelayed(r, 500);
+
+    }
+
+    private static void list_cheker(AppCompatActivity activity) {
+        if (NetManager.net_setting_glob != null){
+            if (NetManager.net_setting_glob.client_ST.equals(Net_setting.ReqType.file)){
+                if (activity instanceof MainActivity){
+                    can_continue = false;
+                    Init.terminal("TRY START NEW ACTIVITY ! TIMES - MAIN (INIT)");
+                    activity.startActivity(new Intent(activity , File_ChooserActivity.class));
+                }
+            }
+        }
+    }
+
 
 
 }

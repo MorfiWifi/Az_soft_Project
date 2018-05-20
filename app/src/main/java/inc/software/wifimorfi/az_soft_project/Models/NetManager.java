@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import inc.software.wifimorfi.az_soft_project.Ui.File_ChooserActivity;
 import inc.software.wifimorfi.az_soft_project.Ui.Net_setting;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
 
@@ -38,6 +39,7 @@ public class NetManager  {
             "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
 
 
+    public static int PORT = 5602;
     public enum  server_state  { waiting_for_client , waiting_for_client_respons
         ,reciving_request,sending_date,sending_list  }
 
@@ -73,6 +75,7 @@ public class NetManager  {
     private File file2;
     public String host = "";
     private static File path ;
+    public static  AppCompatActivity appCompatActivity;
     // TCP CLIENT HERE -----------------------------
 
 
@@ -85,6 +88,7 @@ public class NetManager  {
     private static NetManager netManager;
     public static Net_setting net_setting_glob;
     public static String net_setting_glob_str;
+    public static Boolean isReciving_file = false;
     //public AppCompatActivity activity;
 
     public static NetManager getNt (AppCompatActivity activity){
@@ -132,6 +136,7 @@ public class NetManager  {
     }
 
     public  void togle_client(AppCompatActivity appCompatActivity) {
+        this.appCompatActivity = appCompatActivity;
         path = appCompatActivity.getFilesDir();
         Net_setting net_setting = get_setting();
         Gson gson = new Gson();
@@ -140,12 +145,13 @@ public class NetManager  {
             if (!net_setting.server_ST.equals(Net_setting.ReqType.OFF)){
                 togle_server(appCompatActivity);
             }
+            //Init.Toas(appCompatActivity , "Got after getting KEY");
 
 
             setHost(net_setting.KEY); // TODO: 5/14/2018 Use Host to connect
             // The END KET
 
-            String key =  "192.168.1.100"; // Fixed value YET
+            String key =  "192.168.1.102"; // Fixed value YET
                     //Init.find_et_by_id(this  , R.id.et_dialogue_server_key).getText().toString();
             host = key;
             //nt.setHost(key);
@@ -167,6 +173,7 @@ public class NetManager  {
     }
 
     public  void togle_server(AppCompatActivity appCompatActivity) {
+        this.appCompatActivity = appCompatActivity;
         path = appCompatActivity.getFilesDir();
         Net_setting net_setting = get_setting();
         Gson gson = new Gson();
@@ -352,7 +359,7 @@ public class NetManager  {
 
 
                 //Keep a server_socket open to listen to all the UDP trafic that inputStream destined for this port
-                server_socket = new DatagramSocket(8888, InetAddress.getByName("0.0.0.0"));
+                server_socket = new DatagramSocket(PORT, InetAddress.getByName("0.0.0.0"));
                 server_socket.setBroadcast(true);
 
                 while (true) {
@@ -402,7 +409,7 @@ public class NetManager  {
 
                 //Try the 255.255.255.255 first
                 try {
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), 8888);
+                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("255.255.255.255"), PORT);
                     client_socket.send(sendPacket);
                     System.out.println(getClass().getName() + ">>> Request packet sent to: 255.255.255.255 (DEFAULT)");
                 } catch (Exception e) {
@@ -425,7 +432,7 @@ public class NetManager  {
 
                         // Send the broadcast package!
                         try {
-                            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, 8888);
+                            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, broadcast, PORT);
                             client_socket.send(sendPacket);
                         } catch (Exception e) {
                         }
@@ -474,7 +481,7 @@ public class NetManager  {
                 if (net_setting.server_ST.equals(Net_setting.ReqType.list_comment)||net_setting.server_ST.equals(Net_setting.ReqType.OFF)){
                     String s = gson.toJson(list);
 
-                    sSocket = new ServerSocket(8888);
+                    sSocket = new ServerSocket(PORT);
                     System.out.println("Waiting for incoming connection request...");
                     tcp_server_socket = sSocket.accept();
                     outputStream = tcp_server_socket.getOutputStream();
@@ -484,6 +491,9 @@ public class NetManager  {
                     byte[] b = s.getBytes();
                     System.out.println("Uploading List...");
                     dataOutputStream.write(b, 0, b.length);
+                    System.out.println("Lengh of Bytes" + b.length);
+
+
                     //fis.close();
                     tcp_server_socket.close(); // Do not Close This !!
 
@@ -496,9 +506,9 @@ public class NetManager  {
 
                     // ------------------------------->>>>>>>>>> Second part
 
-                    while (true){
+                    /*while (true){
                         // TODO: 5/12/2018 Implement File Transfer
-                        sSocket = new ServerSocket(8888);
+                        sSocket = new ServerSocket(PORT);
                         System.out.println("Waiting for incoming connection request...");
                         tcp_server_socket = sSocket.accept();
                         inputStream = tcp_server_socket.getInputStream();
@@ -526,13 +536,13 @@ public class NetManager  {
                         fis.close();
                         tcp_server_socket.close();
                         System.out.println("File Transfer Completed Successfully!");
-                    }
+                    }*/
 
 
                 }else if (net_setting.server_ST.equals(Net_setting.ReqType.file)){
 
                     // TODO: 5/12/2018 This is Redundent YET>>>>>>>>>>
-                    sSocket = new ServerSocket(8888);
+                    sSocket = new ServerSocket(PORT);
                     System.out.println("Waiting for incoming connection request...");
                     tcp_server_socket = sSocket.accept();
                     //jfc.showOpenDialog(null);
@@ -577,8 +587,11 @@ public class NetManager  {
                 Gson gson = new Gson();
                 Net_setting net_setting = get_setting();
 
-                if (net_setting.client_ST.equals(Net_setting.ReqType.list_comment)||net_setting.client_ST.equals(Net_setting.ReqType.OFF)){
-                    tcp_client_socket = new Socket(host, 8888);
+                if (   net_setting.client_ST.equals(Net_setting.ReqType.file)){
+
+                    isReciving_file = true;
+                    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  SHOULD BE IN WHILE LOOP FOR LIST SELEVTED!
+                    tcp_client_socket = new Socket(host, PORT);
                     inputStream = tcp_client_socket.getInputStream();
 
                     //tcp_client_socket.getOutputStream();
@@ -603,9 +616,14 @@ public class NetManager  {
                     System.out.println("File Transfer Completed Successfully!");
 
 
-                }else if (net_setting.client_ST.equals(Net_setting.ReqType.file)){
+                }else if (net_setting.client_ST.equals(Net_setting.ReqType.list_comment)||net_setting.client_ST.equals(Net_setting.ReqType.OFF) ){
                     // TODO: 5/12/2018 implement TCP File Client
-                    tcp_client_socket = new Socket(host, 8888);
+                    Init.terminal("CLIENT IS RECIVING LIST ? TRYIND TOO");
+
+
+                    //host
+                    tcp_client_socket = new Socket("192.168.1.102", PORT);
+                    Init.terminal("CLIENT IS RECIVING LIST 2");
                     inputStream = tcp_client_socket.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream)); // For Reading String
                     System.out.println("Waiting for File");
@@ -625,17 +643,35 @@ public class NetManager  {
 
                     try {
                         list = gson.fromJson(jsoon , list2.getClass());
-                        Init.terminal("Converted Json To LIST");
+                        Init.terminal("Converted Json To LIST" + jsoon);
+                        File_ChooserActivity.list = list;
                     }catch (Exception ex){
                         Init.terminal("Couldnt Convert JSON");
                     }
 
+
+
+
+
                     tcp_client_socket.close();
                     System.out.println("File Transfer Completed Successfully!");
+
+
+                    // Should Go To File Recive MODE!! >> FIRST SEND FILE INFO THEN RECIVE!! and loop
+                    get_setting().client_ST = Net_setting.ReqType.file;
+
                 }
 
             }catch (Exception ex){
+                Init.terminal("SOME EXCEPTION ON CLIENT TCP _ AWARE" + ex.getMessage());
+                if (appCompatActivity != null){
+                    //Init.Toas( appCompatActivity,"اتصال رد شد!" ); //EXCEPTION OCCUR
+                    togle_client(appCompatActivity);
+                }
+
                 tcp_client_socket = null;
+
+
                 //get_setting().client_ST = Net_setting.ReqType.OFF;
             }
         }
@@ -654,37 +690,6 @@ public class NetManager  {
             return gson.fromJson(s , requst.class);
         }
     }
-
-    /*public void updater_view (){
-
-        new Thread(new Runnable() {
-            public void run() {
-                mHandlerUpdateUi.post(mUpdateUpdateUi);
-
-            }}).start();
-
-    }
-
-    final Handler mHandlerUpdateUi= new Handler();
-
-    final Runnable mUpdateUpdateUi = new Runnable() {
-        public void run() {
-            //update ui here
-            try {
-                while (true){
-                    //load_setting(setting_json);
-                    Gson gson = new Gson();
-                    Init.MainAC_setting = gson.toJson(get_setting());
-                    wait(); // Cuses EXception
-                }
-            }catch (Exception ex){
-                Init.terminal("EXCEPTION IN UPDATE VIEW NETMAN");
-                Init.terminal(ex.getMessage());
-
-            }
-        }
-    };*/
-
 
 }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Az_soft_Project</string>
+    <string name="app_name">LibMan</string>
     <string name="title_activity_test_basic">Test_basicActivity</string>
     <string name="title_activity_test2">Test2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -8,4 +8,11 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="fire">شلیک</string>
+    <string name="dialog_fire_missiles">شلیک موشک ؟</string>
+    <string name="cancel">خیر</string>
+    <string name="ok">بله</string>
+    <string name="username">نام کاربری</string>
+    <string name="password">رمز</string>
+    <string name="signin">ورود</string>
 </resources>

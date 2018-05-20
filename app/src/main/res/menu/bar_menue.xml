@@ -8,4 +8,13 @@
         android:icon="@drawable/ic_drop_down"
         android:onClick="open_topsheet"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/refresh_app"
+        android:orderInCategory="100"
+        android:title="تازه سازی"
+        android:icon="@drawable/ic_refresh"
+        android:onClick="top_refresh"
+        app:showAsAction="always" />
+
 </menu>

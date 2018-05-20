@@ -15,10 +15,12 @@ import inc.software.wifimorfi.az_soft_project.MainActivity;
 import inc.software.wifimorfi.az_soft_project.Models.NetManager;
 import inc.software.wifimorfi.az_soft_project.R;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
+import inc.software.wifimorfi.az_soft_project.View.Recived_Docks_Recycler_Ad;
 
 public class TopSheetActivity extends AppCompatActivity {
     public String setting_json = "";
     public static int Exit_Cod = 0;
+    private static Boolean can_continue = true;
     //public static MainActivity mainAC;
 
     @Override
@@ -26,7 +28,7 @@ public class TopSheetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topsheet);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
-        toolbar.setTitle("Top_Sheet");
+        toolbar.setTitle("شبکه");
         setSupportActionBar(toolbar);
 
 
@@ -52,6 +54,8 @@ public class TopSheetActivity extends AppCompatActivity {
         };
 
         handler.postDelayed(r, 500);
+
+        check_recived_list(this);
 
     }
 
@@ -210,5 +214,37 @@ public class TopSheetActivity extends AppCompatActivity {
             }
         }
     };*/
+
+    public static void  check_recived_list(final AppCompatActivity activity){
+
+        final Handler handler = new Handler();
+
+        final Runnable r = new Runnable() {
+            public void run() {
+                //tv.append("Hello World");
+                list_cheker(activity);
+                if (!NetManager.isReciving_file){
+                    if (can_continue){
+                        handler.postDelayed(this, 500);
+                    }
+                }
+            }
+        };
+
+        handler.postDelayed(r, 500);
+
+    }
+
+    private static void list_cheker(AppCompatActivity activity) {
+        if (NetManager.net_setting_glob != null){
+            if (NetManager.net_setting_glob.client_ST.equals(Net_setting.ReqType.file)){
+                if (activity instanceof TopSheetActivity){
+                    can_continue = false;
+                    Init.terminal("TRY START NEW ACTIVITY ! TIMES - TOPSHEET");
+                    activity.startActivity(new Intent(activity , File_ChooserActivity.class));
+                }
+            }
+        }
+    }
 
 }

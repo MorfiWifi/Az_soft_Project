@@ -18,10 +18,25 @@
         android:layout_height="match_parent">
 
         <ImageView
-
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="0.3"
             android:id="@+id/im_cross"
-            android:layout_gravity="right"
-            android:src="@drawable/ic_close"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_less"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.v4.widget.Space
+            android:layout_weight="0.1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/im_new_relise"
+            android:visibility="invisible"
+            android:src="@drawable/ic_new_releases_black_24dp"
+            android:layout_weight="0.3"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -68,7 +68,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/H:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_publish_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/H:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/av/ic_new_releases_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -78,10 +78,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_pdf" />
-                            <entry key="sourceFile" value="C:\Users\Wifimorfi\Desktop\pdf.svg" />
+                            <entry key="outputName" value="ic_new_releases_black_24dp" />
+                            <entry key="sourceFile" value="C:\Users\Wifimorfi\Desktop\ICONS_SVG\is-less-than.svg" />
                           </map>
                         </option>
                       </PersistentState>

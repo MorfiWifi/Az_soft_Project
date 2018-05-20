@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="inc.software.wifimorfi.az_soft_project">
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -41,19 +42,18 @@
         <activity
             android:name=".Ui.TopSheetActivity"
             android:theme="@style/Translucent" />
-        <activity android:name=".Ui.DialogueActivity_client"
-            android:theme="@style/Base.Theme.AppCompat.Light.Dialog.FixedSize"
-            />
+        <activity
+            android:name=".Ui.DialogueActivity_client"
+            android:theme="@style/Base.Theme.AppCompat.Light.Dialog.FixedSize" />
         <activity
             android:name=".Ui.Send_ReciveActivity"
             android:theme="@style/Base.Theme.AppCompat.Dialog" />
         <activity
             android:name=".Ui.Test2Activity"
             android:label="@string/title_activity_test2"
-            android:theme="@style/AppTheme.NoActionBar">
-
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Ui.File_ChooserActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

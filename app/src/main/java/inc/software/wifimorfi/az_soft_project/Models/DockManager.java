@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.List;
 
 import inc.software.wifimorfi.az_soft_project.Util.Init;
@@ -57,6 +58,7 @@ public class DockManager {
                             tempi.fullpath = full_path;
                             tempi.name = name;
                             tempi.size = size;
+                            tempi.date = Calendar.getInstance().getTime();
 
                             Init.terminal("Right Before Insertion");
                             dockDao.insert(tempi); // Returnes The ID IN DB

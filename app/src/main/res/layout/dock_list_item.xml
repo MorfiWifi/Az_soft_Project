@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="8dp"
+    android:background="@drawable/background_light_blue"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_weight="0.1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/ch_list_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@drawable/background_rect_stork"
+        android:orientation="horizontal"
+        android:layout_weight="0.04"
+        android:gravity="left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="3"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/im_doc_image"
+            android:src="@drawable/ic_pdf"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_weight="1"
+                android:id="@+id/tv_list_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="H1"
+                android:gravity="center"
+                />
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_weight="1"
+                android:id="@+id/tv_list_rate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="H2"
+                android:gravity="center"
+                />
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_weight="1"
+                android:id="@+id/tv_list_rivew_sm"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="H3"
+                android:gravity="center"
+                />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_weight="0.1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/im_list_3dot"
+            android:layout_weight="0.1"
+            android:src="@drawable/ic_3dot_horiz"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

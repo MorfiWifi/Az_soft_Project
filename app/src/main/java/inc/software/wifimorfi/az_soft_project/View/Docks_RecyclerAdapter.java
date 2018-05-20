@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import inc.software.wifimorfi.az_soft_project.MainActivity;
@@ -58,6 +60,21 @@ public class Docks_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_messa
         holder.t1.setText(sample_message.getName());
         //holder.t3.setText("-NO YET-"); // Use Message Header Insetead!
         //holder.t2.setText("-NO YET-"); // Minimall Tags! (Not All OF Them !)
+
+        //Date d = new Date();
+        Calendar c = Calendar.getInstance();
+        //d = c.getTime();
+        //Date d = new Dat
+        c.set(Calendar.MINUTE , c.get(Calendar.MINUTE) - 30);
+
+
+
+        if (sample_message.getDate().after(c.getTime())){
+            holder.new_relise.setVisibility(View.VISIBLE);
+        }else {
+            holder.new_relise.setVisibility(View.INVISIBLE);
+        }
+
 
         holder.im3dot.setOnClickListener(new View.OnClickListener() {
             @Override

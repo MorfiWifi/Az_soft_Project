@@ -1,5 +1,6 @@
 package inc.software.wifimorfi.az_soft_project
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -7,12 +8,14 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.google.gson.Gson
 import inc.software.wifimorfi.az_soft_project.Models.DockManager
+import inc.software.wifimorfi.az_soft_project.Ui.FireMissilesDialogFragment
 import inc.software.wifimorfi.az_soft_project.Ui.TopSheetActivity
 import inc.software.wifimorfi.az_soft_project.Util.Init
 import java.security.Permission
@@ -42,13 +45,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-        toolbar.title = "Main_paige"
+        toolbar.title = "کتابخانه"
         setSupportActionBar(toolbar)
 
         if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) ) {
             DockManager.scan_memory(Environment.getExternalStorageDirectory() , applicationContext)
             Init.Kot_Ja_main(applicationContext , this)
         }
+
+
+        if (permis == permission.HAVE){
+            Init.check_recived_list(this) // run in back ground cheking !! 500 mill
+        }
+
     }
 
     fun normal_continue (){
@@ -103,5 +112,10 @@ class MainActivity : AppCompatActivity() {
         Init.Save_String(this , Init.Extra_Kry , Init.NO_THING)
         //Init.terminal("MAIN ACTIVITY has Destroyed!!!")
         super.onDestroy()
+    }
+
+    fun top_refresh(item: MenuItem) {
+
+
     }
 }
