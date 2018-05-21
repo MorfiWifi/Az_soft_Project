@@ -28,9 +28,10 @@
             android:textColor="@android:color/black" >
 
             <ImageView
+                android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_account_temp"
+                android:background="@drawable/ic_pdf"
                 android:src="@drawable/shape_ring"
                 android:layout_weight="0.2"
                 />
@@ -75,37 +76,41 @@
 
 
         <LinearLayout
+            android:gravity="center"
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tv_message_matn"
-                android:background="@drawable/background_rect_stork"
-                android:layout_weight="0.1"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/in_dock_review"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="300dp"
                 android:gravity="center"
-                android:text="متن پیام"
-                android:textColor="@android:color/black" />
+                android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/tv_message_date"
-                android:gravity="center"
-                android:layout_weight="0.6"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="تاریخ"/>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/in_edittx_dockreview"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="نطر!" />
+            </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:visibility="gone"
-                android:id="@+id/bu_replat_message"
-                android:layout_margin="10dp"
-                android:background="@drawable/buttom_big_white"
-                android:text="پاسخ"
-                android:layout_weight="0.56"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <RatingBar
+                style="@style/RatingBar"
+                android:layout_marginTop="50dp"
+                android:stepSize="1"
+                android:rating="0"
+                android:numStars="5"
+                android:id="@+id/ra_dock_rate"
+                android:layout_weight="3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
+
+
+
+
 
         </LinearLayout>
 

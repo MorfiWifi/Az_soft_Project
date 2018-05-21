@@ -4,7 +4,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:paddingBottom="8dp"
-    android:id="@+id/bottom_sheet"
+    android:id="@+id/bottom_sheet_for_recive"
     android:layout_width="match_parent"
     android:layout_height="80dp"
 

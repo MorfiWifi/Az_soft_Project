@@ -33,4 +33,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#b20000</item>
+        <item name="colorControlActivated">#df0000</item>
+    </style>
+
+
+
+
+
 </resources>

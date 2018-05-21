@@ -3,6 +3,8 @@ package inc.software.wifimorfi.az_soft_project.Ui;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
@@ -28,6 +31,8 @@ import inc.software.wifimorfi.az_soft_project.View.Recived_Docks_Recycler_Ad;
 public class File_ChooserActivity extends AppCompatActivity {
     public static List<Dock> list;
     public static String json;
+    public int choosen_count = 0;
+    public Recived_Docks_Recycler_Ad recived_docks_recycler_ad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +50,7 @@ public class File_ChooserActivity extends AppCompatActivity {
             Init.Toas(this , String.valueOf(NetManager.list.size()));
             list = new ArrayList<Dock>();
             list =  stringToArray(json , Dock[].class);
-
-
             //ArrayList<Dock> arrayList = (ArrayList<Dock>) list;
-
-
-
             Recived_Docks_Recycler_Ad.Init(list , this);
             //RecyclerView recyclerView = findViewById(R.id.docs_recycle_for_recive);
 
@@ -73,13 +73,48 @@ public class File_ChooserActivity extends AppCompatActivity {
 
             Recived_Docks_Recycler_Ad.Init(NetManager.list , this);*/
 
+           if (list.size() > 0){
+               final Handler handler = new Handler();
 
+               final Runnable r = new Runnable() {
+                   public void run() {
+                       //tv.append("Hello World");
+                       list_cheker();
+                       if (choosen_count > 0){
+                           // Show buttom sheet
+                           LinearLayout bottom_sheet = (LinearLayout)
+                                   findViewById(R.id.bottom_sheet_for_recive);
+                           final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
+                           bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                       }else {
+                           // Hide bittom sheet
+                           LinearLayout bottom_sheet = (LinearLayout)
+                                   findViewById(R.id.bottom_sheet_for_recive);
+                           final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
+                           bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                       }
+                       handler.postDelayed(this, 500);
+                   }
+               };
+
+               handler.postDelayed(r, 500);
+           }
         }
         else{
-            Init.Toas(this , "LIST WAS NULL !!");
+            Init.Toas(this , "LIST WAS Unknown !!");
         }
-
     }
+
+
+    private void  list_cheker (){
+        choosen_count = 0;
+        for (Dock doc: recived_docks_recycler_ad.getDocks()) {
+            if (doc.isSelected){
+                choosen_count = choosen_count +1;
+            }
+        }
+    }
+
 
     public static <T> List<T> stringToArray (String s, Class<T[]> clazz) {
         T[] arr = new Gson().fromJson(s, clazz);

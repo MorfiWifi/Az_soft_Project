@@ -12,11 +12,16 @@ import java.util.List;
 
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
 import inc.software.wifimorfi.az_soft_project.R;
+import inc.software.wifimorfi.az_soft_project.Ui.File_ChooserActivity;
 
 public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_recived_list_item> {
     private List<Dock> docks;
     private static  RecyclerView recyclerView;
     private static AppCompatActivity activity;
+
+    public List<Dock> getDocks (){
+        return docks;
+    }
 
     public Recived_Docks_Recycler_Ad(List<Dock> docks) {
         this.docks = docks;
@@ -30,7 +35,7 @@ public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_r
 
 
     @Override
-    public void onBindViewHolder(ViewHolder_recived_list_item holder, final int position ) {
+    public void onBindViewHolder(final ViewHolder_recived_list_item holder, final int position ) {
         final Dock sample_message = docks.get(position);
 
         holder.t1.setText(sample_message.getName());
@@ -87,6 +92,18 @@ public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_r
             }
         });
 
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.checkBox.isChecked()){
+                    sample_message.isSelected = true;
+                }else {
+                    sample_message.isSelected = false;
+                }
+
+            }
+        });
+
     }
 
 
@@ -109,7 +126,13 @@ public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_r
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setHasFixedSize(false);
-        recyclerView.setAdapter(new Recived_Docks_Recycler_Ad(messages));
+        Recived_Docks_Recycler_Ad rec_view = new Recived_Docks_Recycler_Ad(messages);
+        recyclerView.setAdapter(rec_view);
+
+        if (activity instanceof File_ChooserActivity){
+            ((File_ChooserActivity) activity).recived_docks_recycler_ad  = rec_view;
+
+        }
 
     }
 }

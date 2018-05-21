@@ -24,6 +24,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,6 +32,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import inc.software.wifimorfi.az_soft_project.Ui.DialogueActivity_client;
 import inc.software.wifimorfi.az_soft_project.Ui.File_ChooserActivity;
 import inc.software.wifimorfi.az_soft_project.Ui.Net_setting;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
@@ -90,6 +92,8 @@ public class NetManager  {
     public static Net_setting net_setting_glob;
     public static String net_setting_glob_str;
     public static Boolean isReciving_file = false;
+    public static List<Dock> want_list;
+    public static List<Dock> will_send_list;
     //public AppCompatActivity activity;
 
     public static NetManager getNt (AppCompatActivity activity){
@@ -152,9 +156,9 @@ public class NetManager  {
             setHost(net_setting.KEY); // TODO: 5/14/2018 Use Host to connect
             // The END KET
 
-            String key =  "192.168.1.102"; // Fixed value YET
+            //String key =  "192.168.1.102"; // Fixed value YET
                     //Init.find_et_by_id(this  , R.id.et_dialogue_server_key).getText().toString();
-            host = key;
+            host = net_setting.KEY;
             //nt.setHost(key);
 
             // TODO: 5/11/2018  Connecting To Host is hard Coded At time! -- > For Debugging
@@ -487,7 +491,6 @@ public class NetManager  {
                     System.out.println("Waiting for incoming connection request...");
                     tcp_server_socket = sSocket.accept();
                     outputStream = tcp_server_socket.getOutputStream();
-                    //dataOutputStream = new DataOutputStream(outputStream);
                     PrintWriter printWriter = new PrintWriter(outputStream);
 
                     //dataOutputStream.writeUTF(file.getName());
@@ -497,24 +500,72 @@ public class NetManager  {
 
                     byte[] b = s.getBytes();
                     System.out.println("Uploading List...");
-
-
-
-                    //dataOutputStream.write(b, 0, b.length);
                     System.out.println("Lengh of Bytes" + b.length);
-
-
-                    //fis.close();
                     tcp_server_socket.close(); // Do not Close This !!
-
-
-
-
                     net_setting.server_ST = Net_setting.ReqType.file;
                     net_setting_glob_str = gson.toJson(get_setting());
                     System.out.println("List Transfer Completed Successfully!");
 
                     // ------------------------------->>>>>>>>>> Second part
+                    // -------------------------------- Will Wait For Wanted List
+
+                    InputStream inputStream_server = tcp_server_socket.getInputStream();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream_server)); // For Reading String
+                    String jsoon = "";
+                    String str;
+                    while ((str = bufferedReader.readLine()) != null) {
+                        jsoon = jsoon + str;
+                    }
+                    Init.terminal(jsoon);
+                    will_send_list = stringToArray(jsoon , Dock[].class);
+
+                    for (Dock dock:will_send_list) {
+
+                        file = new File(path, dock.name);
+                        FileInputStream fis = new FileInputStream(file);
+                        outputStream = tcp_server_socket.getOutputStream();
+                        dataOutputStream = new DataOutputStream(outputStream);
+                        dataOutputStream.writeUTF(file.getName());
+                        count = 0;
+                        b = new byte[1000];
+                        System.out.println("Uploading File...");
+                        while ((count = fis.read(b)) != -1) {
+                            dataOutputStream.write(b, 0, count);
+                        }
+                        fis.close();
+                    }
+                    tcp_server_socket.close();
+                    System.out.println("File Transfer Completed Successfully!");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     /*while (true){
                         // TODO: 5/12/2018 Implement File Transfer
@@ -551,7 +602,7 @@ public class NetManager  {
 
                 }else if (net_setting.server_ST.equals(Net_setting.ReqType.file)){
 
-                    // TODO: 5/12/2018 This is Redundent YET>>>>>>>>>>
+                    // TODO: 5/12/2018 This is Redundent YET>>>>>>>>>>  Server is continues not seperate
                     sSocket = new ServerSocket(PORT);
                     System.out.println("Waiting for incoming connection request...");
                     tcp_server_socket = sSocket.accept();
@@ -601,40 +652,43 @@ public class NetManager  {
 
                 if (   net_setting.client_ST.equals(Net_setting.ReqType.file)){
 
-                    isReciving_file = true;
-                    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  SHOULD BE IN WHILE LOOP FOR LIST SELEVTED!
-                    tcp_client_socket = new Socket(host, PORT);
-                    inputStream = tcp_client_socket.getInputStream();
+                    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SHOULD RUN AGAIN TO RECEIVE FILES
+                    OutputStream outputStream_cl;
+                    outputStream_cl = tcp_client_socket.getOutputStream();
+                    PrintWriter printWriter = new PrintWriter(outputStream_cl);
+                    String s = gson.toJson(want_list);
+                    printWriter.write(s);
+                    printWriter.flush();
 
-                    //tcp_client_socket.getOutputStream();
-                    dataInputStream = new DataInputStream(inputStream);
-                    System.out.println("Waiting for File");
-                    //jfc.setSelectedFile(new File(dataInputStream.readUTF()));
-                    //jfc.showSaveDialog(null);
-                    file2 = new File("C:\\text.txt"); // TODO: 5/10/2018 chainge path throw - fullpath
-                    //file2 = ;
-                    //jfc.getSelectedFile();
-                    FileOutputStream fos = new FileOutputStream(file2);
-                    int count = 0;
-                    byte[] b = new byte[1000];
-                    System.out.println("Incoming File");
-                    while((count = dataInputStream.read(b)) != -1){
-                        // count is the tru size ! (Some may not used)
-                        fos.write(b, 0, count);
+                    for (Dock docki:want_list) {
+                        isReciving_file = true;
+                        inputStream = tcp_client_socket.getInputStream();
+                        dataInputStream = new DataInputStream(inputStream);
+                        System.out.println("Waiting for File");
+                        file2 = new File(docki.name); // TODO: 5/10/2018 chainge path throw - fullpath
+                        FileOutputStream fos = new FileOutputStream(file2);
+                        int count = 0;
+                        byte[] b = new byte[1000];
+                        System.out.println("Incoming File");
+                        while((count = dataInputStream.read(b)) != -1){
+                            // count is the tru size ! (Some may not used)
+                            fos.write(b, 0, count);
+                        }
+                        fos.close();
                     }
-
-                    fos.close();
                     tcp_client_socket.close();
-                    System.out.println("File Transfer Completed Successfully!");
-
+                    System.out.println("File Reciving Completed Successfully!");
 
                 }else if (net_setting.client_ST.equals(Net_setting.ReqType.list_comment)||net_setting.client_ST.equals(Net_setting.ReqType.OFF) ){
                     // TODO: 5/12/2018 implement TCP File Client
                     Init.terminal("CLIENT IS RECIVING LIST ? TRYIND TOO");
 
 
+
+                    setHost(DialogueActivity_client.Server_KEY);
                     //host
-                    tcp_client_socket = new Socket("192.168.1.108", PORT);
+                    Init.terminal("Host Adress in client is : "+host);
+                    tcp_client_socket = new Socket(host, PORT);
                     Init.terminal("CLIENT IS RECIVING LIST 2");
                     inputStream = tcp_client_socket.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream)); // For Reading String
@@ -674,6 +728,9 @@ public class NetManager  {
                     // Should Go To File Recive MODE!! >> FIRST SEND FILE INFO THEN RECIVE!! and loop
                     get_setting().client_ST = Net_setting.ReqType.file;
 
+                    //****************************************************************** *** ** SENDING REQ FILES-info
+
+
                 }
 
             }catch (Exception ex){
@@ -705,5 +762,9 @@ public class NetManager  {
         }
     }
 
+    public static <T> List<T> stringToArray (String s, Class<T[]> clazz) {
+        T[] arr = new Gson().fromJson(s, clazz);
+        return Arrays.asList(arr); //or return Arrays.asList(new Gson().fromJson(s, clazz)); for a one-liner
+    }
 }
 
