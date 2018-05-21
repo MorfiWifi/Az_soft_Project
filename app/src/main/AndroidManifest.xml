@@ -44,14 +44,14 @@
             android:theme="@style/Translucent" />
         <activity
             android:name=".Ui.DialogueActivity_client"
-            android:theme="@style/Base.Theme.AppCompat.Light.Dialog.FixedSize" />
+            android:theme="@style/motf_dialogue" />
         <activity
             android:name=".Ui.Send_ReciveActivity"
             android:theme="@style/Base.Theme.AppCompat.Dialog" />
         <activity
             android:name=".Ui.Test2Activity"
             android:label="@string/title_activity_test2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Ui.File_ChooserActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

@@ -11,8 +11,13 @@ import android.view.View;
 
 import com.google.gson.Gson;
 
+import java.util.List;
+
 import inc.software.wifimorfi.az_soft_project.MainActivity;
+import inc.software.wifimorfi.az_soft_project.Models.DaoSession;
+import inc.software.wifimorfi.az_soft_project.Models.Dock;
 import inc.software.wifimorfi.az_soft_project.Models.NetManager;
+import inc.software.wifimorfi.az_soft_project.Models.Repository;
 import inc.software.wifimorfi.az_soft_project.R;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
 import inc.software.wifimorfi.az_soft_project.View.Recived_Docks_Recycler_Ad;
@@ -158,7 +163,10 @@ public class TopSheetActivity extends AppCompatActivity {
     }
 
     public void go_share(View view) {
-        //startActivity(new Intent(this , DialogueActivity_client.class)); // Yet no PopUP MENUE -> to be continued
+        DaoSession session = Repository.GetInstant(this);
+        List<Dock> current_docks2 = session.getDockDao().loadAll();
+        current_docks2.size();
+        NetManager.list = current_docks2;
         NetManager.getNt(this).togle_server(this);
     }
 

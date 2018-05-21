@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -480,17 +481,26 @@ public class NetManager  {
 
                 if (net_setting.server_ST.equals(Net_setting.ReqType.list_comment)||net_setting.server_ST.equals(Net_setting.ReqType.OFF)){
                     String s = gson.toJson(list);
+                    Init.terminal("Json = "+ s);
 
                     sSocket = new ServerSocket(PORT);
                     System.out.println("Waiting for incoming connection request...");
                     tcp_server_socket = sSocket.accept();
                     outputStream = tcp_server_socket.getOutputStream();
-                    dataOutputStream = new DataOutputStream(outputStream);
+                    //dataOutputStream = new DataOutputStream(outputStream);
+                    PrintWriter printWriter = new PrintWriter(outputStream);
+
                     //dataOutputStream.writeUTF(file.getName());
                     int count = 0;
+                    printWriter.write(s);
+                    printWriter.flush();
+
                     byte[] b = s.getBytes();
                     System.out.println("Uploading List...");
-                    dataOutputStream.write(b, 0, b.length);
+
+
+
+                    //dataOutputStream.write(b, 0, b.length);
                     System.out.println("Lengh of Bytes" + b.length);
 
 
@@ -567,6 +577,8 @@ public class NetManager  {
 
 
             }catch (Exception ex){
+                Init.terminal("exception in server" + ex.getMessage());
+                togle_server(appCompatActivity);
                 sSocket = null;
                 tcp_server_socket = null;
                 //get_setting().server_ST = Net_setting.ReqType.OFF;
@@ -622,7 +634,7 @@ public class NetManager  {
 
 
                     //host
-                    tcp_client_socket = new Socket("192.168.1.102", PORT);
+                    tcp_client_socket = new Socket("192.168.1.108", PORT);
                     Init.terminal("CLIENT IS RECIVING LIST 2");
                     inputStream = tcp_client_socket.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream)); // For Reading String
@@ -640,11 +652,13 @@ public class NetManager  {
                     Init.terminal(jsoon);
 
                     List<Dock> list2 = new ArrayList<>();
+                    ArrayList<Dock> arr = new ArrayList<Dock>();
 
                     try {
-                        list = gson.fromJson(jsoon , list2.getClass());
+                        list = gson.fromJson(jsoon ,  arr.getClass());
                         Init.terminal("Converted Json To LIST" + jsoon);
                         File_ChooserActivity.list = list;
+                        File_ChooserActivity.json = jsoon;
                     }catch (Exception ex){
                         Init.terminal("Couldnt Convert JSON");
                     }

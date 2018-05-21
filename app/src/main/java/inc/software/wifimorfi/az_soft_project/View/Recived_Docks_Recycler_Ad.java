@@ -1,6 +1,5 @@
 package inc.software.wifimorfi.az_soft_project.View;
 
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,14 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
 import java.util.List;
+
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
 import inc.software.wifimorfi.az_soft_project.R;
-import inc.software.wifimorfi.az_soft_project.Ui.Send_ReciveActivity;
 
 public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_recived_list_item> {
     private List<Dock> docks;
@@ -39,7 +35,7 @@ public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_r
 
         holder.t1.setText(sample_message.getName());
         holder.t3.setText(sample_message.getComment()); // CUT THIS LESS !!! MAY NEED
-        holder.t2.setText(sample_message.getRate());
+        holder.t2.setText(String.valueOf(sample_message.getRate()));
 
         holder.dots3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,17 +99,17 @@ public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_r
 
     public static void Init(List<Dock> messages , AppCompatActivity activity){
         recyclerView = activity.findViewById(R.id.docs_recycle_for_recive);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(activity, 2);
-        recyclerView.setLayoutManager(mLayoutManager);
+//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(activity, 2);
+//        recyclerView.setLayoutManager(mLayoutManager);
 
 
         Recived_Docks_Recycler_Ad.activity = activity;
         //recyclerView.refreshDrawableState();
-        //LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
-        //recyclerView.setLayoutManager(linearLayoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setHasFixedSize(false);
-        recyclerView.setAdapter(new Docks_RecyclerAdapter(messages));
+        recyclerView.setAdapter(new Recived_Docks_Recycler_Ad(messages));
 
     }
 }

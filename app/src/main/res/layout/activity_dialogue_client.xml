@@ -3,32 +3,51 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="200dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transpa"
+    android:gravity="center"
 
-    android:gravity="top"
     tools:context=".Ui.DialogueActivity_client">
 
+    <RelativeLayout
+        android:background="@drawable/background_rect_stork"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:background="@drawable/buttom_blue_stack"
-        android:onClick="connect_client"
-        android:id="@+id/bt_dialogue_b2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="75dp"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:text="اتصال" />
 
-    <EditText
-        android:id="@+id/et_dialogue_server_key"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:hint="کلید اتصال"
-        android:textSize="20sp" />
+        <Button
+            android:background="@drawable/buttom_blue_stack"
+            android:onClick="connect_client"
+            android:id="@+id/bt_dialogue_b2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="75dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="اتصال" />
+
+        <EditText
+            android:lines="1"
+            android:gravity="center"
+            android:id="@+id/et_dialogue_server_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:hint="کلید اتصال"
+            android:textSize="20sp" />
+        
+        <android.support.v4.widget.Space
+            android:layout_below="@id/bt_dialogue_b2"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+
+    </RelativeLayout>
+
+
+
 
 </RelativeLayout>
