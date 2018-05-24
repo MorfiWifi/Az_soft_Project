@@ -8,4 +8,6 @@ public class Net_setting {
     public ReqType client_ST = ReqType.OFF;
     public String KEY = "";
 
+    public static String ENDTHING = "ENDITNOW";
+
 }

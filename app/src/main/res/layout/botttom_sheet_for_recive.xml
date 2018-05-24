@@ -29,6 +29,7 @@
             android:layout_height="match_parent">
 
             <Button
+                android:onClick="get_wanted_docks"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:visibility="visible"

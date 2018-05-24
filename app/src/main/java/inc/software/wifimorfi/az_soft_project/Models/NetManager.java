@@ -168,6 +168,10 @@ public class NetManager  {
             get_thread_instance_client().start(); // Can change th State in this code
             //cs = DialogueActivity_client.Client_status.ON;
             //Init.find_tv_by_id(this , R.id.tv_dialogue_tv2).setText("Client_ON");
+        }else if (appCompatActivity instanceof File_ChooserActivity){
+            Init.terminal("Trying to start again -Client");
+            getNt(appCompatActivity).client.start();
+            //get_thread_instance_client().start(); //Start Again Sending WLis!
         }else {
             get_setting().client_ST = Net_setting.ReqType.OFF;
             net_setting_glob_str = gson.toJson(get_setting());
@@ -205,7 +209,7 @@ public class NetManager  {
              // how the KEY - UP
             //ss = DialogueActivity_client.Server_status.ON;
             //Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_ON"); // No dialogue YET
-        }else {
+        }  else {
             show_client_ip();
             get_setting().server_ST = Net_setting.ReqType.OFF;
             net_setting_glob_str = gson.toJson(get_setting());
@@ -490,18 +494,29 @@ public class NetManager  {
                     sSocket = new ServerSocket(PORT);
                     System.out.println("Waiting for incoming connection request...");
                     tcp_server_socket = sSocket.accept();
+                    Init.terminal("Got OUT PUT AND IN PUT AT SAME TIME");
                     outputStream = tcp_server_socket.getOutputStream();
+                    InputStream inputStream_server = tcp_server_socket.getInputStream();
+                    Init.terminal("Success in Getting Both");
                     PrintWriter printWriter = new PrintWriter(outputStream);
 
                     //dataOutputStream.writeUTF(file.getName());
                     int count = 0;
-                    printWriter.write(s);
+                    printWriter.println(s);
                     printWriter.flush();
+
+                    printWriter.println(Net_setting.ENDTHING); // Force Ending Hope Work
+                    printWriter.flush();
+                    //outputStream.flush();
+                    //outputStream.close();//just checking (Had to Close Socket!)
+
+                    //printWriter.
+                    //printWriter.close(); //
 
                     byte[] b = s.getBytes();
                     System.out.println("Uploading List...");
                     System.out.println("Lengh of Bytes" + b.length);
-                    tcp_server_socket.close(); // Do not Close This !!
+                    //tcp_server_socket.close(); // Do not Close This !! Yet no Closing here
                     net_setting.server_ST = Net_setting.ReqType.file;
                     net_setting_glob_str = gson.toJson(get_setting());
                     System.out.println("List Transfer Completed Successfully!");
@@ -509,16 +524,27 @@ public class NetManager  {
                     // ------------------------------->>>>>>>>>> Second part
                     // -------------------------------- Will Wait For Wanted List
 
-                    InputStream inputStream_server = tcp_server_socket.getInputStream();
+                    //tcp_server_socket.close();
+                    System.out.println("Trying To RECIVE WANT LIST");
+                   // InputStream inputStream_server = tcp_server_socket.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream_server)); // For Reading String
                     String jsoon = "";
                     String str;
-                    while ((str = bufferedReader.readLine()) != null) {
+
+                    str = bufferedReader.readLine();
+                    while (str != null) {
+                        if (str.equals(Net_setting.ENDTHING)){
+                            Init.terminal("GOT THE FORCE FINISH PART CODE");
+                            break;
+                        }
                         jsoon = jsoon + str;
+                        str = bufferedReader.readLine();
                     }
+
                     Init.terminal(jsoon);
                     will_send_list = stringToArray(jsoon , Dock[].class);
 
+                    System.out.println("Trying To SEND FILES IN WANT LIST");
                     for (Dock dock:will_send_list) {
 
                         file = new File(path, dock.name);
@@ -536,9 +562,7 @@ public class NetManager  {
                     }
                     tcp_server_socket.close();
                     System.out.println("File Transfer Completed Successfully!");
-
-
-
+                    get_setting().server_ST = Net_setting.ReqType.OFF; //// TODO: 5/24/2018 Turning OFF THE SERVER
 
 
 
@@ -656,16 +680,24 @@ public class NetManager  {
                     OutputStream outputStream_cl;
                     outputStream_cl = tcp_client_socket.getOutputStream();
                     PrintWriter printWriter = new PrintWriter(outputStream_cl);
+                    Init.terminal("SENDING WANT LIST >>>>>>");
                     String s = gson.toJson(want_list);
-                    printWriter.write(s);
+                    printWriter.println(s);
                     printWriter.flush();
+                    Init.terminal("WANT LIST HAS SENT !!!");
+
+                    printWriter.println(Net_setting.ENDTHING); // Force Ending Hope Work
+                    printWriter.flush();
+                    Init.terminal("END SEND COD HAS SENT !!!");
+                    Init.terminal(want_list.size() + " = size of Send LIST");
 
                     for (Dock docki:want_list) {
                         isReciving_file = true;
                         inputStream = tcp_client_socket.getInputStream();
                         dataInputStream = new DataInputStream(inputStream);
                         System.out.println("Waiting for File");
-                        file2 = new File(docki.name); // TODO: 5/10/2018 chainge path throw - fullpath
+
+                        file2 = new File(docki.fullpath); // TODO: 5/10/2018 chainge path throw - fullpath
                         FileOutputStream fos = new FileOutputStream(file2);
                         int count = 0;
                         byte[] b = new byte[1000];
@@ -674,8 +706,11 @@ public class NetManager  {
                             // count is the tru size ! (Some may not used)
                             fos.write(b, 0, count);
                         }
+                        System.out.println("File fINISHED reCIVING~~!!");
                         fos.close();
                     }
+
+                    get_setting().client_ST = Net_setting.ReqType.OFF;
                     tcp_client_socket.close();
                     System.out.println("File Reciving Completed Successfully!");
 
@@ -699,8 +734,14 @@ public class NetManager  {
 
                     String jsoon = "";
                     String str;
-                    while ((str = bufferedReader.readLine()) != null) {
+                    str = bufferedReader.readLine();
+                    while (str != null) {
+                        if (str.equals(Net_setting.ENDTHING)){
+                            Init.terminal("GOT THE FORCE FINISH PART CODE");
+                            break;
+                        }
                         jsoon = jsoon + str;
+                        str = bufferedReader.readLine();
                     }
 
                     Init.terminal(jsoon);
@@ -721,7 +762,7 @@ public class NetManager  {
 
 
 
-                    tcp_client_socket.close();
+                    //tcp_client_socket.close(); // TODO: 5/24/2018 Do not Close Soket!
                     System.out.println("File Transfer Completed Successfully!");
 
 

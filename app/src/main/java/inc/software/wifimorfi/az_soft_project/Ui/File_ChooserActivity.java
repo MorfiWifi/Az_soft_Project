@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
@@ -135,5 +136,25 @@ public class File_ChooserActivity extends AppCompatActivity {
             return;
         }
         mngr.getDeviceId();
+    }
+
+    public void get_wanted_docks(View view) {
+        list_cheker();
+        if (choosen_count <= 0){
+            Init.Toas(this , "چیزی انتخواب نشده!");
+        }else{
+            // TODO: 5/24/2018 Start  Sending List and Reciving Things!
+            List<Dock> want = new ArrayList<>();
+            for (Dock dock: list) {
+                if (dock.isSelected){
+                    want.add(dock);
+                }
+            }
+            NetManager.want_list = want;
+            NetManager.getNt(this).togle_client(this);
+
+
+
+        }
     }
 }
