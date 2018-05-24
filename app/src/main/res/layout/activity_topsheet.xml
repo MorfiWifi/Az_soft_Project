@@ -17,8 +17,8 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar3"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:layout_height="@dimen/actionBarSize"
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -47,7 +47,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:src="@drawable/ic_share"
+                    app:srcCompat="@drawable/ic_share"
                     android:layout_weight="1.4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -92,7 +92,7 @@
 
                 <ImageView
                     android:id="@+id/im_topsheet_wifi"
-                    android:src="@drawable/ic_no_wifi"
+                    app:srcCompat="@drawable/ic_no_wifi"
                     android:layout_weight="1.4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

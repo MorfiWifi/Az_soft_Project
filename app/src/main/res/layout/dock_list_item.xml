@@ -7,7 +7,8 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="200dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -42,7 +43,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:id="@+id/im_doc_image"
-            android:src="@drawable/ic_pdf"
+            app:srcCompat="@drawable/ic_pdf"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -93,7 +94,7 @@
         <ImageView
             android:id="@+id/im_list_3dot"
             android:layout_weight="0.1"
-            android:src="@drawable/ic_3dot_horiz"
+            app:srcCompat="@drawable/ic_3dot_horiz"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
