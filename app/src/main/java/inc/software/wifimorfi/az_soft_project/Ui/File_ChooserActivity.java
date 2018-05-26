@@ -148,10 +148,13 @@ public class File_ChooserActivity extends AppCompatActivity {
             for (Dock dock: list) {
                 if (dock.isSelected){
                     want.add(dock);
+
                 }
             }
             NetManager.want_list = want;
-            NetManager.getNt(this).togle_client(this);
+            NetManager.is_wantlist_ready = true;
+            // Client Already Running!
+            //NetManager.getNt(this).togle_client(this);
 
 
 

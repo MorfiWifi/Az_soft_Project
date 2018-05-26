@@ -115,7 +115,7 @@ public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_r
 
 
     public static void Init(List<Dock> messages , AppCompatActivity activity){
-        recyclerView = activity.findViewById(R.id.docs_recycle_for_recive);
+        recyclerView = (RecyclerView) activity.findViewById(R.id.docs_recycle_for_recive);
 //        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(activity, 2);
 //        recyclerView.setLayoutManager(mLayoutManager);
 

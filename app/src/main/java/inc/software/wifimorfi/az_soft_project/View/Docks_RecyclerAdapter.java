@@ -3,9 +3,12 @@ package inc.software.wifimorfi.az_soft_project.View;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +22,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import inc.software.wifimorfi.az_soft_project.BuildConfig;
 import inc.software.wifimorfi.az_soft_project.MainActivity;
 import inc.software.wifimorfi.az_soft_project.Models.DaoSession;
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
@@ -84,9 +90,9 @@ public class Docks_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_messa
                     tv_sender.setText("-YET NO USE-");
                     TextView tv_header = (TextView) activity.findViewById(R.id.tv_message_header);
                     tv_header.setText(docks.get(position).getName());
-                    final RatingBar ratingBar = activity.findViewById(R.id.ra_dock_rate);
+                    final RatingBar ratingBar = (RatingBar) activity.findViewById(R.id.ra_dock_rate);
                     ratingBar.setRating((float) sample_message.getRate());
-                    final TextInputEditText textInputEditText = activity.findViewById(R.id.in_edittx_dockreview);
+                    final TextInputEditText textInputEditText = (TextInputEditText) activity.findViewById(R.id.in_edittx_dockreview);
                     textInputEditText.setText(sample_message.getComment());
 
                     ImageView im_close = (ImageView) activity.findViewById(R.id.im_close_message);
@@ -117,7 +123,18 @@ public class Docks_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_messa
 
                 Intent intent = Intent.createChooser(target, "Open "+sample_message.getName());
                 try {
-                    activity.startActivity(intent);
+
+                    //activity.startActivity(intent);
+                    //Uri photoURI = Uri.fromFile(createImageFile(sample_message));
+//                    Uri photoURI = FileProvider.getUriForFile(activity,
+//                            BuildConfig.APPLICATION_ID + ".provider",
+//                            createImageFile(sample_message));
+//
+//                    //Uri photoURI = Uri.fromFile(createImageFile());
+//                    target.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    activity.startActivity(target);
+                    //if (v)
+
                 } catch (ActivityNotFoundException e) {
                     // Instruct the user to install a PDF reader here, or something
                     Init.Toas(activity , "یه برنامه برای pdf نصب کنی بد نیست");
@@ -137,12 +154,31 @@ public class Docks_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_messa
 
 
     public static void Init(List<Dock> messages , AppCompatActivity activity){
-        recyclerView = activity.findViewById(R.id.docs_recycle);
+        recyclerView = (RecyclerView) activity.findViewById(R.id.docs_recycle);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(activity, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         Docks_RecyclerAdapter.activity = activity;
         recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(new Docks_RecyclerAdapter(messages));
 
+    }
+
+    private File createImageFile( Dock selected_dock)  {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "Camera");
+       /* File image = File.createTempFile(
+                selected_dock.getName(),  *//* prefix *//*
+                ".jpg",         *//* suffix *//*
+                storageDir      *//* directory *//*
+        );*/
+
+        File file = new File(selected_dock.getFullpath());
+
+        // Save a file: path for use with ACTION_VIEW intents
+        //mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return file;
     }
 }

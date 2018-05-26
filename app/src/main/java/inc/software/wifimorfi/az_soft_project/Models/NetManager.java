@@ -94,6 +94,7 @@ public class NetManager  {
     public static Boolean isReciving_file = false;
     public static List<Dock> want_list;
     public static List<Dock> will_send_list;
+    public static Boolean is_wantlist_ready = false;
     //public AppCompatActivity activity;
 
     public static NetManager getNt (AppCompatActivity activity){
@@ -547,7 +548,8 @@ public class NetManager  {
                     System.out.println("Trying To SEND FILES IN WANT LIST");
                     for (Dock dock:will_send_list) {
 
-                        file = new File(path, dock.name);
+                        file = new File(dock.fullpath); // Path for sending File
+                                //new File(path, dock.name);
                         FileInputStream fis = new FileInputStream(file);
                         outputStream = tcp_server_socket.getOutputStream();
                         dataOutputStream = new DataOutputStream(outputStream);
@@ -557,11 +559,14 @@ public class NetManager  {
                         System.out.println("Uploading File...");
                         while ((count = fis.read(b)) != -1) {
                             dataOutputStream.write(b, 0, count);
+                            System.out.println("Buffer of File Uploaded ...");
                         }
                         fis.close();
+                        System.out.println("File Uploaded FINISHED");
+                        dataOutputStream.flush();
                     }
                     tcp_server_socket.close();
-                    System.out.println("File Transfer Completed Successfully!");
+                    System.out.println("ALL File Transfer Completed Successfully!");
                     get_setting().server_ST = Net_setting.ReqType.OFF; //// TODO: 5/24/2018 Turning OFF THE SERVER
 
 
@@ -674,49 +679,14 @@ public class NetManager  {
                 Gson gson = new Gson();
                 Net_setting net_setting = get_setting();
 
-                if (   net_setting.client_ST.equals(Net_setting.ReqType.file)){
+                if (  false){
 
-                    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SHOULD RUN AGAIN TO RECEIVE FILES
-                    OutputStream outputStream_cl;
-                    outputStream_cl = tcp_client_socket.getOutputStream();
-                    PrintWriter printWriter = new PrintWriter(outputStream_cl);
-                    Init.terminal("SENDING WANT LIST >>>>>>");
-                    String s = gson.toJson(want_list);
-                    printWriter.println(s);
-                    printWriter.flush();
-                    Init.terminal("WANT LIST HAS SENT !!!");
 
-                    printWriter.println(Net_setting.ENDTHING); // Force Ending Hope Work
-                    printWriter.flush();
-                    Init.terminal("END SEND COD HAS SENT !!!");
-                    Init.terminal(want_list.size() + " = size of Send LIST");
 
-                    for (Dock docki:want_list) {
-                        isReciving_file = true;
-                        inputStream = tcp_client_socket.getInputStream();
-                        dataInputStream = new DataInputStream(inputStream);
-                        System.out.println("Waiting for File");
-
-                        file2 = new File(docki.fullpath); // TODO: 5/10/2018 chainge path throw - fullpath
-                        FileOutputStream fos = new FileOutputStream(file2);
-                        int count = 0;
-                        byte[] b = new byte[1000];
-                        System.out.println("Incoming File");
-                        while((count = dataInputStream.read(b)) != -1){
-                            // count is the tru size ! (Some may not used)
-                            fos.write(b, 0, count);
-                        }
-                        System.out.println("File fINISHED reCIVING~~!!");
-                        fos.close();
-                    }
-
-                    get_setting().client_ST = Net_setting.ReqType.OFF;
-                    tcp_client_socket.close();
-                    System.out.println("File Reciving Completed Successfully!");
-
-                }else if (net_setting.client_ST.equals(Net_setting.ReqType.list_comment)||net_setting.client_ST.equals(Net_setting.ReqType.OFF) ){
+                }else if (net_setting.client_ST.equals(Net_setting.ReqType.list_comment)||net_setting.client_ST.equals(Net_setting.ReqType.OFF) || net_setting.client_ST.equals(Net_setting.ReqType.file) ){
                     // TODO: 5/12/2018 implement TCP File Client
                     Init.terminal("CLIENT IS RECIVING LIST ? TRYIND TOO");
+
 
 
 
@@ -769,9 +739,53 @@ public class NetManager  {
                     // Should Go To File Recive MODE!! >> FIRST SEND FILE INFO THEN RECIVE!! and loop
                     get_setting().client_ST = Net_setting.ReqType.file;
 
-                    //****************************************************************** *** ** SENDING REQ FILES-info
+                    //*********************************************************************** SENDING REQ FILES-info
 
+                    while (!is_wantlist_ready){
+                        Init.terminal("Trying To Waint ON Client");
+                        Thread.sleep((long) 1500);
+                        Init.terminal("Passed THE Waint ON Client");
+                        //wait(500); // wait for getting ready!
+                    }
 
+                    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SHOULD RUN AGAIN TO RECEIVE FILES
+                    OutputStream outputStream_cl;
+                    outputStream_cl = tcp_client_socket.getOutputStream();
+                    PrintWriter printWriter = new PrintWriter(outputStream_cl);
+                    Init.terminal("SENDING WANT LIST >>>>>>");
+                    String s = gson.toJson(want_list);
+                    printWriter.println(s);
+                    printWriter.flush();
+                    Init.terminal("WANT LIST HAS SENT !!!");
+
+                    printWriter.println(Net_setting.ENDTHING); // Force Ending Hope Work
+                    printWriter.flush();
+                    Init.terminal("END SEND COD HAS SENT !!!");
+                    Init.terminal(want_list.size() + " = size of Send LIST");
+
+                    for (Dock docki:want_list) {
+                        isReciving_file = true;
+                        inputStream = tcp_client_socket.getInputStream();
+                        dataInputStream = new DataInputStream(inputStream);
+                        System.out.println("Waiting for File");
+
+                        file2 = new File(docki.fullpath); // TODO: 5/10/2018 chainge path throw - fullpath
+                        FileOutputStream fos = new FileOutputStream(file2);
+                        int count = 0;
+                        byte[] b = new byte[1000];
+                        System.out.println("Incoming File");
+                        while((count = dataInputStream.read(b)) != -1){
+                            // count is the tru size ! (Some may not used)
+                            System.out.println("Writing  File >>>>>> IN");
+                            fos.write(b, 0, count);
+                        }
+                        System.out.println("File fINISHED reCIVING~~!!");
+                        fos.close();
+                    }
+
+                    get_setting().client_ST = Net_setting.ReqType.OFF;
+                    tcp_client_socket.close();
+                    System.out.println("File Reciving Completed Successfully!");
                 }
 
             }catch (Exception ex){

@@ -22,8 +22,8 @@ public class ViewHolder_recived_list_item extends RecyclerView.ViewHolder {
         t2 = (TextView) itemView.findViewById(R.id.tv_list_rivew_sm);
         t3 = (TextView) itemView.findViewById(R.id.tv_list_rate);
         t1 = (TextView) itemView.findViewById(R.id.tv_list_name);
-        dots3 = itemView.findViewById(R.id.im_list_3dot);
-        checkBox = itemView.findViewById(R.id.ch_list_item);
+        dots3 = (ImageView) itemView.findViewById(R.id.im_list_3dot);
+        checkBox = (CheckBox) itemView.findViewById(R.id.ch_list_item);
 
     }
 }
