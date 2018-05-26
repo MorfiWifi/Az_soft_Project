@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_margin="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/buttom_big_white"
+    android:gravity="center"
+    tools:context=".Ui.DialogueActivity_client">
+
+    <RelativeLayout
+        android:background="@drawable/background_rect_stork"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <Button
+            android:background="@drawable/buttom_blue_stack"
+            android:onClick="close_dialogue"
+            android:layout_below="@id/rate_dialogue"
+            android:id="@+id/bt_dialogue_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="بستن" />
+
+        <RatingBar
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:numStars="5"
+            style="@style/RatingBar"
+            android:stepSize="1"
+            android:rating="0"
+            android:id="@+id/rate_dialogue"
+            android:layout_below="@id/scroll_dialogue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <ScrollView
+            android:layout_marginTop="5dp"
+            android:id="@+id/scroll_dialogue"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <TextView
+                android:textColor="#ff000000"
+                android:id="@+id/tv_dialogue_comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:gravity="center"
+                android:text="@string/داستان" />
+
+
+        </ScrollView>
+
+
+
+        <android.support.v4.widget.Space
+            android:layout_below="@id/bt_dialogue_close"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

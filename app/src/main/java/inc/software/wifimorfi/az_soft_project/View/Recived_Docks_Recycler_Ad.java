@@ -1,5 +1,6 @@
 package inc.software.wifimorfi.az_soft_project.View;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
 import inc.software.wifimorfi.az_soft_project.R;
+import inc.software.wifimorfi.az_soft_project.Ui.Dialoge_about_dock_Activity;
 import inc.software.wifimorfi.az_soft_project.Ui.File_ChooserActivity;
 
 public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_recived_list_item> {
@@ -45,6 +47,10 @@ public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_r
         holder.dots3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Dialoge_about_dock_Activity.dock = sample_message;
+                activity.startActivity(new Intent(activity , Dialoge_about_dock_Activity.class));
+
+
 
                 /*if (activity instanceof Send_ReciveActivity){
                     // TODO: 5/20/2018 Fix bottom sheet or Dialogue in this page!!! >> dialogue is easier
