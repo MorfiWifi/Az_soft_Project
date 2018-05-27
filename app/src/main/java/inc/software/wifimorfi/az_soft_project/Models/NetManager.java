@@ -95,6 +95,14 @@ public class NetManager  {
     public static List<Dock> want_list;
     public static List<Dock> will_send_list;
     public static Boolean is_wantlist_ready = false;
+
+    public static Boolean is_reciving_file = false;
+    public static Dock is_reciving_dock = null;
+    public static Boolean is_EX = false;
+    public static int reciving_buf_count = 0;
+    public static int buff_size = 1000;
+    public static Boolean is_reciving_finished = false;
+
     //public AppCompatActivity activity;
 
     public static NetManager getNt (AppCompatActivity activity){
@@ -764,6 +772,7 @@ public class NetManager  {
                     Init.terminal(want_list.size() + " = size of Send LIST");
 
                     for (Dock docki:want_list) {
+                        int num_buffs = 0;
                         isReciving_file = true;
                         inputStream = tcp_client_socket.getInputStream();
                         dataInputStream = new DataInputStream(inputStream);
@@ -775,9 +784,13 @@ public class NetManager  {
                         byte[] b = new byte[1000];
                         System.out.println("Incoming File");
                         while((count = dataInputStream.read(b)) != -1){
+                            is_reciving_dock = docki;
+                            is_reciving_file = true;
                             // count is the tru size ! (Some may not used)
                             System.out.println("Writing  File >>>>>> IN");
                             fos.write(b, 0, count);
+                            num_buffs ++;
+                            reciving_buf_count = num_buffs;
                         }
                         System.out.println("File fINISHED reCIVING~~!!");
                         fos.close();
@@ -786,12 +799,14 @@ public class NetManager  {
                     get_setting().client_ST = Net_setting.ReqType.OFF;
                     tcp_client_socket.close();
                     System.out.println("File Reciving Completed Successfully!");
+                    is_reciving_finished = true;
                 }
 
             }catch (Exception ex){
                 Init.terminal("SOME EXCEPTION ON CLIENT TCP _ AWARE" + ex.getMessage());
                 if (appCompatActivity != null){
                     //Init.Toas( appCompatActivity,"اتصال رد شد!" ); //EXCEPTION OCCUR
+                    is_EX = true;
                     togle_client(appCompatActivity);
                 }
 

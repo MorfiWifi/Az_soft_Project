@@ -34,6 +34,7 @@ import inc.software.wifimorfi.az_soft_project.Models.DaoSession;
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
 import inc.software.wifimorfi.az_soft_project.Models.Repository;
 import inc.software.wifimorfi.az_soft_project.R;
+import inc.software.wifimorfi.az_soft_project.Ui.Dialogue;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
 
 
@@ -74,6 +75,13 @@ public class Docks_RecyclerAdapter extends RecyclerView.Adapter<ViewHolder_messa
             holder.new_relise.setVisibility(View.INVISIBLE);
         }
 
+        holder.im_cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialogue dialogue = new Dialogue();
+                dialogue.Remove_file(activity , sample_message).show();
+            }
+        });
         holder.im3dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

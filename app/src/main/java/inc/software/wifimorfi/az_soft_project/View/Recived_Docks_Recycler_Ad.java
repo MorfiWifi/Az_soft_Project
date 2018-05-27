@@ -51,50 +51,6 @@ public class Recived_Docks_Recycler_Ad extends RecyclerView.Adapter<ViewHolder_r
                 activity.startActivity(new Intent(activity , Dialoge_about_dock_Activity.class));
 
 
-
-                /*if (activity instanceof Send_ReciveActivity){
-                    // TODO: 5/20/2018 Fix bottom sheet or Dialogue in this page!!! >> dialogue is easier
-
-                    LinearLayout bottom_sheet = (LinearLayout)
-                            activity.findViewById(R.id.bottom_sheet);
-                    final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet);
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-                    // **************************************************
-
-                    TextView tv_sender = (TextView) activity.findViewById(R.id.tv_message_sender);
-
-                    tv_sender.setText("-YET NO USE-");
-
-                    TextView tv_header = (TextView) activity.findViewById(R.id.tv_message_header);
-
-                    //tv_header.setText(docks.get(position).Tags);
-                    tv_header.setText(docks.get(position).getName());
-
-                    TextView tv_matn = (TextView) activity.findViewById(R.id.tv_message_matn);
-                    //tv_matn.setText(docks.get(position).Matn);
-                    tv_matn.setText("-YET NO USE-");
-
-                    TextView tv_date = (TextView) activity.findViewById(R.id.tv_message_date);
-                    //tv_date.setText(docks.get(position).Recive_Date);
-                    tv_date.setText("-YET NO USE-");
-
-
-                    Button bu_reply = (Button) activity.findViewById(R.id.bu_replat_message);
-                    bu_reply.setVisibility(View.GONE);
-
-
-                    ImageView im_close = (ImageView) activity.findViewById(R.id.im_close_message);
-                    im_close.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                        }
-                    });
-
-
-
-                }*/
             }
         });
 

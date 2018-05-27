@@ -65,11 +65,11 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".Ui.Dialoge_about_dock_Activity"
-            android:theme="@style/motf_dialogue"
-            >
-        </activity>
-
+        <activity
+            android:name=".Ui.Dialoge_about_dock_Activity"
+            android:theme="@style/motf_dialogue"></activity>
+        <activity android:name=".Ui.Dialogue_recive_statesticsActivity"
+            android:theme="@style/motf_dialogue"></activity>
     </application>
 
 </manifest>

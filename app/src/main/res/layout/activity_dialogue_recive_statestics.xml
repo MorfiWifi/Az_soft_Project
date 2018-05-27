@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/buttom_big_white"
+    android:layout_margin="10dp"
+    tools:context=".Ui.Dialogue_recive_statesticsActivity">
+
+    <TextView
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:maxLength="20"
+        android:text="LAB_LAasdadjsfm,cba fabs,fnams,bams,vbam,vba,svabm,vbam,s v,ma va,sv a,sB"
+        android:id="@+id/tv_stat_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_below="@id/tv_stat_name"
+        android:gravity="center"
+        android:maxLength="10"
+        android:text="lablab2"
+        android:id="@+id/tv_stat_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_stat_size"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="lablab3"
+        android:id="@+id/tv_stat_persent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_below="@id/tv_stat_persent"/>
+
+
+</RelativeLayout>

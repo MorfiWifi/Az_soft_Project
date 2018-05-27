@@ -117,5 +117,9 @@ class MainActivity : AppCompatActivity() {
     fun top_refresh(item: MenuItem) {
 
 
+        if (permis == permission.HAVE){
+            normal_continue()
+        }
+
     }
 }

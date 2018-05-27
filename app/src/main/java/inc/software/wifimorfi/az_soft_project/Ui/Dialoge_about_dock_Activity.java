@@ -19,7 +19,18 @@ public class Dialoge_about_dock_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_dialoge_about_dock_);
         RatingBar ratingBar = (RatingBar) findViewById(R.id.rate_dialogue);
         TextView textView = (TextView) findViewById(R.id.tv_dialogue_comment);
-        textView.setText(dock.getComment());
+        String text = dock.getComment();
+        if (text == null){
+            textView.setText("بدون نظر");
+        }else {
+            if (text.length() < 1){
+                textView.setText("بدون نظر");
+            }else {
+                textView.setText(dock.getComment());
+            }
+        }
+
+
         ratingBar.setNumStars(5);
         ratingBar.setRating((float) dock.getRate());
         ratingBar.setEnabled(false);

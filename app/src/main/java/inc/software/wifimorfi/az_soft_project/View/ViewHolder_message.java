@@ -19,6 +19,7 @@ public class ViewHolder_message extends RecyclerView.ViewHolder {
    // public TextView t3;
     public ImageView im3dot;
     public ImageView new_relise;
+    public ImageView im_cross;
 
     public ViewHolder_message(View itemView) {
         super(itemView);
@@ -29,5 +30,7 @@ public class ViewHolder_message extends RecyclerView.ViewHolder {
         new_relise = (ImageView) itemView.findViewById(R.id.im_new_relise);
         //t2 = (TextView) itemView.findViewById(R.id.tv_message_t2);
         //t3 = (TextView) itemView.findViewById(R.id.tv_message_t3);
+
+        im_cross = (ImageView) itemView.findViewById(R.id.im_cross);
     }
 }

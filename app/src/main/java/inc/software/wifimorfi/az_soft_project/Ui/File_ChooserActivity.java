@@ -2,6 +2,7 @@ package inc.software.wifimorfi.az_soft_project.Ui;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
@@ -143,7 +144,6 @@ public class File_ChooserActivity extends AppCompatActivity {
         if (choosen_count <= 0){
             Init.Toas(this , "چیزی انتخواب نشده!");
         }else{
-            // TODO: 5/24/2018 Start  Sending List and Reciving Things!
             List<Dock> want = new ArrayList<>();
             for (Dock dock: list) {
                 if (dock.isSelected){
@@ -153,6 +153,12 @@ public class File_ChooserActivity extends AppCompatActivity {
             }
             NetManager.want_list = want;
             NetManager.is_wantlist_ready = true;
+
+            Intent intent = new Intent(this , Dialogue_recive_statesticsActivity.class);
+            startActivity(intent);
+
+
+
             // Client Already Running!
             //NetManager.getNt(this).togle_client(this);
 
