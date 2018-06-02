@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:orientation="vertical"
+    android:id="@+id/lin_main_activity"
+    android:focusableInTouchMode="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -8,19 +10,32 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.AppBarLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
+
         <android.support.v7.widget.Toolbar
+            android:layout_weight="1"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/actionBarSize"
             android:background="@color/colorPrimary"
-
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+
+
     </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tv_list_is_empty"
+        android:layout_marginTop="150dp"
+        android:gravity="center"
+        android:text="MORFI TEST"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/docs_recycle"

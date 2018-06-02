@@ -8,11 +8,16 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import inc.software.wifimorfi.az_soft_project.MainActivity;
@@ -20,6 +25,7 @@ import inc.software.wifimorfi.az_soft_project.Models.DaoSession;
 import inc.software.wifimorfi.az_soft_project.Models.Dock;
 import inc.software.wifimorfi.az_soft_project.Models.NetManager;
 import inc.software.wifimorfi.az_soft_project.Models.Repository;
+import inc.software.wifimorfi.az_soft_project.R;
 import inc.software.wifimorfi.az_soft_project.Ui.File_ChooserActivity;
 import inc.software.wifimorfi.az_soft_project.Ui.Net_setting;
 import inc.software.wifimorfi.az_soft_project.Ui.TopSheetActivity;
@@ -50,8 +56,9 @@ public class Init {
 
     public static void Kot_Ja_main (Context context , AppCompatActivity activity){
 
-        //DaoSession session = Repository.GetInstant(context);
         DaoSession session = Repository.GetInstant(context);
+
+
         //List<?> current_docks2 =  (List<?>) session.getAllDaos();
 
         List<Dock> current_docks2 = session.getDockDao().loadAll();
@@ -143,5 +150,66 @@ public class Init {
     }
 
 
+    public static void init_search(@NotNull MainActivity mainActivity) {
+        /*final SearchView searchView = (SearchView) mainActivity.findViewById(R.id.searchBar_thing);
+//        searchView.getQuery();
+//        Init.terminal(searchView.getQuery().toString());
+
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchView != null){
+                    Init.terminal(searchView.getQuery().toString());
+                }
+
+            }
+        });*/
+
+    }
+
+    public static void filter_docks (MainActivity mainActivity , String s){
+
+        DaoSession session = Repository.GetInstant(mainActivity);
+        List<Dock> current_docks2 = session.getDockDao().loadAll();
+        List<Dock> res = new ArrayList<>();
+
+
+
+        res.clear();
+
+        if(s.isEmpty())
+        {
+            res.addAll(current_docks2);
+        }
+        else
+        {
+            for(Dock name: current_docks2)
+            {
+                if(name.getName().toLowerCase().contains(s.toLowerCase()))
+                {
+                    res.add(name);
+                }
+            }
+
+        }
+        if (res.size() < 1){
+            loud_empty_mesage(mainActivity , "چری نیست !" , true);
+        }else {
+            loud_empty_mesage(mainActivity , "چری نیست !" , false);
+        }
+
+        Docks_RecyclerAdapter.Init(res , mainActivity);
+    }
+
+    public static void loud_empty_mesage (MainActivity mainActivity , String s , boolean show){
+        TextView tv = Init.find_tv_by_id( mainActivity, R.id.tv_list_is_empty);
+        tv.setText(s);
+        if (show){
+            tv.setVisibility(View.VISIBLE);
+        }else {
+            tv.setVisibility(View.GONE);
+        }
+    }
 
 }

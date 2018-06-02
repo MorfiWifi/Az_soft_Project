@@ -1,26 +1,32 @@
 package inc.software.wifimorfi.az_soft_project
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import com.google.gson.Gson
 import inc.software.wifimorfi.az_soft_project.Models.DockManager
-import inc.software.wifimorfi.az_soft_project.Ui.FireMissilesDialogFragment
-import inc.software.wifimorfi.az_soft_project.Ui.TopSheetActivity
 import inc.software.wifimorfi.az_soft_project.Util.Init
-import java.security.Permission
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
+    override fun onQueryTextChange(newText: String?): Boolean {
+        if (newText != null){
+            Init.filter_docks(this , newText)
+        }
+
+        return true
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
     enum class permission{ HAVE , NOPE}
 
     private var permis = MainActivity.permission.NOPE
@@ -58,6 +64,14 @@ class MainActivity : AppCompatActivity() {
             Init.check_recived_list(this) // run in back ground cheking !! 500 mill
         }
 
+
+        Init.init_search(this)
+        val rootView = findViewById(R.id.lin_main_activity)
+        rootView.requestFocus()
+        //searchView = (SearchView) findViewById(R.id.search_view);
+      /*  val m = findViewById(R.id.searchBar)
+        m.setOnClickListener()*/
+
     }
 
     fun normal_continue (){
@@ -71,6 +85,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.bar_menue, menu)
+        // Inflate the menu; this adds items to the action bar if it is present.
+
+
+        val searchItem = menu.findItem(R.id.searchBar_thing)
+
+        val searchView = searchItem.actionView as SearchView
+        searchView.setQueryHint("جستجو")
+        searchView.setOnQueryTextListener(this)
+        searchView.setIconified(true)
+        //searchView.set
+
+
         return true
     }
 
@@ -121,5 +147,13 @@ class MainActivity : AppCompatActivity() {
             normal_continue()
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //val searchView =  findViewById(R.id.searchBar_thing)
+        //searchView.clearFocus()
+        val rootView = findViewById(R.id.lin_main_activity)
+        rootView.requestFocus()
     }
 }
