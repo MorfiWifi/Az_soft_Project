@@ -40,10 +40,25 @@
             android:textSize="20sp" />
         
         <android.support.v4.widget.Space
-            android:layout_below="@id/bt_dialogue_b2"
+            android:layout_below="@id/rec_list_ips"
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
+
+        <TextView
+            android:gravity="center"
+            android:text="فعلا هیچ!"
+            android:layout_below="@id/bt_dialogue_b2"
+            android:id="@+id/tv_emty_ips"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:visibility="gone"
+            android:layout_below="@id/bt_dialogue_b2"
+            android:id="@+id/rec_list_ips"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
 
     </RelativeLayout>
 

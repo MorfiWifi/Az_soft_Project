@@ -38,6 +38,8 @@ import inc.software.wifimorfi.az_soft_project.Ui.Net_setting;
 import inc.software.wifimorfi.az_soft_project.Util.Init;
 
 public class NetManager  {
+    public static List<String> ips = new ArrayList<>();
+
     String IPADDRESS_PATTERN =
             "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)";
 
@@ -115,9 +117,9 @@ public class NetManager  {
 
 
     public static Thread get_thread_instance_server (){
-        if (server == null){
+//        if (server == null){
             server = new Thread(nt.get_serevr_tcp());
-        }
+//        }
         return server;
     }
 
@@ -213,7 +215,6 @@ public class NetManager  {
             net_setting_glob_str = gson.toJson(get_setting());
 
 
-
             get_thread_instance_server().start(); // Check nex value's here
              // how the KEY - UP
             //ss = DialogueActivity_client.Server_status.ON;
@@ -221,13 +222,10 @@ public class NetManager  {
         }  else {
             show_client_ip();
             get_setting().server_ST = Net_setting.ReqType.OFF;
+            net_setting_glob.server_ST = Net_setting.ReqType.OFF;
             net_setting_glob_str = gson.toJson(get_setting());
             Stop_Server_tcp();
-            server = null; // Releasing Th thread (Should stop guess)
-
-
-            //ss = DialogueActivity_client.Server_status.OFF;
-            //Init.find_tv_by_id(this , R.id.tv_dialogue_tv1).setText("Server_OFF");
+            //server = null; // Releasing Th thread (Should stop guess)
         }
 
 
@@ -271,12 +269,14 @@ public class NetManager  {
         int t = 0;
         try {
 
-            if ( sSocket == null){
+            if ( sSocket != null){
                 sSocket.close();
+                Init.terminal("Closed  sSocket  >>>>>>>>>>>>>>");
             }
             t = 1;
-            if (tcp_server_socket == null){
+            if (tcp_server_socket != null){
                 tcp_server_socket.close();
+                Init.terminal("Closed  tcp_server_socket  >>>>>>>>>>>>>>");
             }
             t = 0;
         }catch (Exception ex){
@@ -389,11 +389,15 @@ public class NetManager  {
                     server_socket.receive(packet);
 
                     //Packet received
-                    System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-                    System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()).trim());
+//                    System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
+//                    System.out.println(getClass().getName() + ">>>Packet received; data: " + new String(packet.getData()).trim());
 
                     //See if the packet holds the right command (message)
                     String message = new String(packet.getData()).trim();
+                    Init.terminal("recived IP over UDP : "+ message);
+                    // message Should be The IP OF OUTER ONE !
+                    ips.add(message);
+
                     if (message.equals(Discover_Request)) {
                         byte[] sendData = Discovery_Respose.getBytes();
 
@@ -418,12 +422,16 @@ public class NetManager  {
         @Override
         public void run() {
             try {
-                Gson gson = new Gson();
+//                Gson gson = new Gson();
                 //Open a random port to send the package
                 client_socket = new DatagramSocket();
                 client_socket.setBroadcast(true);
 
-                byte[] sendData = Discover_Request.getBytes();
+                String my_ip = get_myIp();
+                Init.terminal("IP THAT WILL SEND UDP : " + my_ip);
+
+                // Sendeing IP OVER UDP!
+                byte[] sendData = my_ip.getBytes();
 
                 //Try the 255.255.255.255 first
                 try {
@@ -462,22 +470,22 @@ public class NetManager  {
                 System.out.println(getClass().getName() + ">>> Done looping over all network interfaces. Now waiting for a reply!");
 
                 //Wait for a response
-                byte[] recvBuf = new byte[15000];
-                DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
-                client_socket.receive(receivePacket);
-
-
-
-                //We have a response
-                System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
-
-                //Check if the message inputStream correct
-                String message = new String(receivePacket.getData()).trim();
-                if (message.equals(Discovery_Respose)) {
-                    // TODO: 5/6/2018 Found The Server IP ! <CAN USE IT>
-                    //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
-                    //Controller_Base.setServerIp(receivePacket.getAddress());
-                }
+//                byte[] recvBuf = new byte[15000];
+//                DatagramPacket receivePacket = new DatagramPacket(recvBuf, recvBuf.length);
+//                client_socket.receive(receivePacket);
+//
+//
+//
+//                //We have a response
+//                System.out.println(getClass().getName() + ">>> Broadcast response from server: " + receivePacket.getAddress().getHostAddress());
+//
+//                //Check if the message inputStream correct
+////                String message = new String(receivePacket.getData()).trim();
+//                if (message.equals(Discovery_Respose)) {
+//                    // TODO: 5/6/2018 Found The Server IP ! <CAN USE IT>
+//                    //DO SOMETHING WITH THE SERVER'S IP (for example, store it in your controller)
+//                    //Controller_Base.setServerIp(receivePacket.getAddress());
+//                }
 
                 //Close the port!
                 client_socket.close();
@@ -580,63 +588,6 @@ public class NetManager  {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    /*while (true){
-                        // TODO: 5/12/2018 Implement File Transfer
-                        sSocket = new ServerSocket(PORT);
-                        System.out.println("Waiting for incoming connection request...");
-                        tcp_server_socket = sSocket.accept();
-                        inputStream = tcp_server_socket.getInputStream();
-                        //inputStream.read()
-
-                        // NOW GET THE DOCK THAT WANT !!!! EVEN ID IS ENOUGH!
-
-
-                        //jfc.showOpenDialog(null);
-                        //file = jfc.getSelectedFile();
-                        file = new File(path, "my-file-name.txt");
-
-
-                        FileInputStream fis = new FileInputStream(file);
-                        outputStream = tcp_server_socket.getOutputStream();
-                        dataOutputStream = new DataOutputStream(outputStream);
-                        dataOutputStream.writeUTF(file.getName());
-                        count = 0;
-                        b = new byte[1000];
-                        System.out.println("Uploading File...");
-                        while ((count = fis.read(b)) != -1) {
-                            dataOutputStream.write(b, 0, count);
-                        }
-
-                        fis.close();
-                        tcp_server_socket.close();
-                        System.out.println("File Transfer Completed Successfully!");
-                    }*/
-
-
                 }else if (net_setting.server_ST.equals(Net_setting.ReqType.file)){
 
                     // TODO: 5/12/2018 This is Redundent YET>>>>>>>>>>  Server is continues not seperate
@@ -666,7 +617,9 @@ public class NetManager  {
 
             }catch (Exception ex){
                 Init.terminal("exception in server" + ex.getMessage());
-                togle_server(appCompatActivity);
+                net_setting.server_ST = Net_setting.ReqType.OFF;
+                Stop_Server_tcp();
+//                togle_server(appCompatActivity);
                 sSocket = null;
                 tcp_server_socket = null;
                 //get_setting().server_ST = Net_setting.ReqType.OFF;

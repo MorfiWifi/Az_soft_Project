@@ -163,6 +163,14 @@ public class TopSheetActivity extends AppCompatActivity {
     }
 
     public void go_share(View view) {
+        // *************************************
+        Init.terminal("before udp activated");
+        Thread udp_server = new Thread(NetManager.getNt(this).get_client());
+        udp_server.start(); // Hope for Paralell UDP
+        Init.terminal("after udp activated");
+        // *************************************
+
+
         DaoSession session = Repository.GetInstant(this);
         List<Dock> current_docks2 = session.getDockDao().loadAll();
         current_docks2.size();
@@ -171,6 +179,13 @@ public class TopSheetActivity extends AppCompatActivity {
     }
 
     public void connect_lan(View view) {
+        //***************************************
+        // First Running THE UDP DISCOVER
+        Init.terminal("before udp client");
+        Thread udp_client = new Thread(NetManager.getNt(this).get_serevr());
+        udp_client.start(); // Hope for Paralell UDP
+        Init.terminal("after udp client");
+        //***************************************
         if (NetManager.net_setting_glob == null){
             Intent intent = new Intent(this , DialogueActivity_client.class);
             startActivity(intent);
@@ -196,32 +211,7 @@ public class TopSheetActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    /*public void updater (){
 
-        new Thread(new Runnable() {
-            public void run() {
-                mHandlerUpdateUi.post(mUpdateUpdateUi);
-
-            }}).start();
-
-    }
-
-    final Handler mHandlerUpdateUi= new Handler();
-
-    final Runnable mUpdateUpdateUi = new Runnable() {
-        public void run() {
-            //update ui here
-            try {
-                while (Exit_Cod < 1){
-                    load_setting(Init.MainAC_setting);
-                    wait(100); // Cause Exception
-                }
-            }catch (Exception ex){
-                Init.terminal("EXCEPTION IN UPDATE VIEW topSheet");
-                Init.terminal(ex.getMessage());
-            }
-        }
-    };*/
 
     public static void  check_recived_list(final AppCompatActivity activity){
 
