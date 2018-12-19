@@ -91,9 +91,9 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         val searchItem = menu.findItem(R.id.searchBar_thing)
 
         val searchView = searchItem.actionView as SearchView
-        searchView.setQueryHint("جستجو")
+        searchView.queryHint = "جستجو"
         searchView.setOnQueryTextListener(this)
-        searchView.setIconified(true)
+        searchView.isIconified = true
         //searchView.set
 
 
